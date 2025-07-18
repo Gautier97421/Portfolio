@@ -1,0 +1,123 @@
+# Portfolio 3D - Dépendances du projet
+
+## Framework principal
+next@latest
+react@latest
+react-dom@latest
+
+## TypeScript
+typescript@latest
+@types/node@latest
+@types/react@latest
+@types/react-dom@latest
+
+## Styling
+tailwindcss@latest
+autoprefixer@latest
+postcss@latest
+
+## Animations et 3D
+framer-motion@latest
+@react-three/fiber@latest
+@react-three/drei@latest
+three@latest
+
+## UI Components
+@radix-ui/react-accordion@latest
+@radix-ui/react-alert-dialog@latest
+@radix-ui/react-avatar@latest
+@radix-ui/react-button@latest
+@radix-ui/react-card@latest
+@radix-ui/react-dropdown-menu@latest
+@radix-ui/react-hover-card@latest
+@radix-ui/react-label@latest
+@radix-ui/react-navigation-menu@latest
+@radix-ui/react-popover@latest
+@radix-ui/react-progress@latest
+@radix-ui/react-scroll-area@latest
+@radix-ui/react-select@latest
+@radix-ui/react-separator@latest
+@radix-ui/react-sheet@latest
+@radix-ui/react-slider@latest
+@radix-ui/react-switch@latest
+@radix-ui/react-table@latest
+@radix-ui/react-tabs@latest
+@radix-ui/react-toast@latest
+@radix-ui/react-tooltip@latest
+
+## Icônes
+lucide-react@latest
+
+## Utilitaires
+class-variance-authority@latest
+clsx@latest
+tailwind-merge@latest
+
+## Configuration ESLint
+eslint@latest
+eslint-config-next@latest
+
+## Installation
+# npm install next react react-dom typescript @types/node @types/react @types/react-dom
+# npm install tailwindcss autoprefixer postcss
+# npm install framer-motion @react-three/fiber @react-three/drei three
+# npm install lucide-react
+# npm install class-variance-authority clsx tailwind-merge
+# npm install @radix-ui/react-accordion @radix-ui/react-alert-dialog @radix-ui/react-avatar
+# npm install @radix-ui/react-button @radix-ui/react-card @radix-ui/react-dropdown-menu
+# npm install @radix-ui/react-hover-card @radix-ui/react-label @radix-ui/react-navigation-menu
+# npm install @radix-ui/react-popover @radix-ui/react-progress @radix-ui/react-scroll-area
+# npm install @radix-ui/react-select @radix-ui/react-separator @radix-ui/react-sheet
+# npm install @radix-ui/react-slider @radix-ui/react-switch @radix-ui/react-table
+# npm install @radix-ui/react-tabs @radix-ui/react-toast @radix-ui/react-tooltip
+# npm install eslint eslint-config-next
+
+## Commandes de développement
+# npm run dev - Démarrer le serveur de développement
+# npm run build - Construire l'application pour la production
+# npm run start - Démarrer l'application en mode production
+# npm run lint - Vérifier le code avec ESLint
+
+## Structure recommandée du projet
+# /
+# ├── app/
+# │   ├── globals.css
+# │   ├── layout.tsx
+# │   ├── page.tsx
+# │   └── projet/
+# │       └── [id]/
+# │           └── page.tsx
+# ├── components/
+# │   ├── ui/
+# │   │   ├── button.tsx
+# │   │   ├── card.tsx
+# │   │   └── ...
+# │   └── custom-cursor.tsx
+# ├── lib/
+# │   └── utils.ts
+# ├── public/
+# ├── next.config.js
+# ├── tailwind.config.js
+# ├── tsconfig.json
+# └── package.json
+
+## Notes d'installation
+# 1. Créer un nouveau projet Next.js : npx create-next-app@latest portfolio-3d --typescript --tailwind --eslint --app
+# 2. Installer les dépendances listées ci-dessus
+# 3. Configurer shadcn/ui : npx shadcn@latest init
+# 4. Ajouter les composants UI nécessaires : npx shadcn@latest add button card
+# 5. Copier les fichiers du portfolio dans le projet
+# 6. Lancer le projet : npm run dev
+
+## Optimisations de production
+# - Utiliser next/image pour les images
+# - Implémenter le lazy loading pour les composants 3D
+# - Optimiser les bundles avec dynamic imports
+# - Configurer les headers de cache appropriés
+# - Utiliser un CDN pour les assets statiques
+
+## Déploiement recommandé
+# - Vercel (recommandé pour Next.js)
+# - Netlify
+# - AWS Amplify
+# - Docker + serveur VPS

@@ -1,0 +1,475 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom gradient animations */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+/* Glow effects */
+.glow {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+}
+
+/* Effet d'absorption pour les éléments interactifs */
+.interactive-element {
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-element::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 255, 255, 0.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.interactive-element:hover::after {
+  opacity: 1;
+}
+
+/* ===== ANIMATIONS POUR BOUTONS DE NAVIGATION (MAUVE) ===== */
+@keyframes nav-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(6);
+    opacity: 0;
+  }
+}
+
+@keyframes nav-wave {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.nav-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.nav-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.8) 0%, rgba(168, 85, 247, 0.4) 70%, transparent 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 0;
+}
+
+.nav-button:hover::before {
+  width: 300%;
+  height: 300%;
+  animation: nav-wave 1s ease-out;
+}
+
+.nav-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: rgba(168, 85, 247, 0.9);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 1;
+}
+
+.nav-button:hover::after {
+  animation: nav-ripple 0.8s ease-out;
+}
+
+.nav-button:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(147, 51, 234, 0.4) 100%);
+  border-color: rgba(168, 85, 247, 0.8);
+  color: #e879f9;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+  transform: translateY(-2px);
+}
+
+.nav-button.active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.8) 0%, rgba(147, 51, 234, 0.9) 100%);
+}
+
+.nav-button > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== ANIMATIONS POUR BOUTONS DE COMPÉTENCES (VERT) ===== */
+@keyframes skill-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes skill-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.skill-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.skill-button:hover {
+  animation: skill-pulse 1.5s infinite;
+  background: linear-gradient(45deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.2), rgba(16, 185, 129, 0.1));
+  background-size: 200% 200%;
+  animation: skill-glow 2s ease infinite, skill-pulse 1.5s infinite;
+  border-color: rgba(16, 185, 129, 0.6);
+  transform: translateY(-3px) rotate(1deg);
+}
+
+/* ===== NOUVELLES ANIMATIONS POUR BOUTONS À PROPOS - ONGLETS (CYAN/TURQUOISE) ===== */
+@keyframes about-tab-morph {
+  0% {
+    border-radius: 8px;
+    transform: scale(1) skew(0deg);
+  }
+  25% {
+    border-radius: 20px;
+    transform: scale(1.05) skew(2deg);
+  }
+  50% {
+    border-radius: 8px;
+    transform: scale(1.1) skew(0deg);
+  }
+  75% {
+    border-radius: 15px;
+    transform: scale(1.05) skew(-2deg);
+  }
+  100% {
+    border-radius: 8px;
+    transform: scale(1) skew(0deg);
+  }
+}
+
+@keyframes about-tab-liquid {
+  0% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+  25% {
+    clip-path: polygon(0% 0%, 95% 5%, 100% 100%, 5% 95%);
+  }
+  50% {
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  }
+  75% {
+    clip-path: polygon(0% 5%, 100% 0%, 100% 95%, 0% 100%);
+  }
+  100% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+@keyframes about-tab-neon {
+  0%,
+  100% {
+    text-shadow: 0 0 5px rgba(6, 182, 212, 0.5), 0 0 10px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 30px rgba(6, 182, 212, 0.6), 0 0 40px rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), inset 0 0 20px rgba(6, 182, 212, 0.2);
+  }
+}
+
+.about-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.about-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.4), transparent);
+  transition: left 0.8s ease;
+  z-index: 1;
+}
+
+.about-button:hover::before {
+  left: 100%;
+}
+
+.about-button:hover {
+  animation: about-tab-morph 2s ease-in-out infinite, about-tab-neon 1.5s ease-in-out infinite;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.2) 0%,
+    rgba(8, 145, 178, 0.3) 50%,
+    rgba(6, 182, 212, 0.2) 100%
+  );
+  border-color: rgba(6, 182, 212, 0.8);
+  color: #67e8f9;
+  transform: translateY(-3px) scale(1.02);
+}
+
+.about-button > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== NOUVELLES ANIMATIONS POUR BOUTONS DE PROJETS (MAUVE) ===== */
+@keyframes project-ripple-fill {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes project-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6), 0 0 60px rgba(168, 85, 247, 0.4);
+  }
+}
+
+.project-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.project-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.8) 0%,
+    rgba(147, 51, 234, 0.6) 40%,
+    rgba(168, 85, 247, 0.3) 70%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.project-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: rgba(168, 85, 247, 0.9);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.project-button:hover::before {
+  width: 400%;
+  height: 400%;
+}
+
+.project-button:hover::after {
+  animation: project-ripple-fill 1s ease-out;
+}
+
+.project-button:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(147, 51, 234, 0.3) 100%);
+  border-color: rgba(168, 85, 247, 0.8);
+  color: #e879f9;
+  transform: translateY(-5px) scale(1.02);
+  animation: project-glow-pulse 2s ease-in-out infinite;
+}
+
+.project-button > * {
+  position: relative;
+  z-index: 3;
+}
+
+/* Animation spéciale pour le remplissage au curseur */
+.project-button.cursor-fill::before {
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(168, 85, 247, 0.9) 0%,
+    rgba(147, 51, 234, 0.7) 30%,
+    rgba(168, 85, 247, 0.4) 60%,
+    transparent 100%
+  );
+}
+
+/* ===== ANIMATIONS POUR STATS (VIOLET) ===== */
+@keyframes stat-float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+@keyframes stat-sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+.stat-button {
+  position: relative;
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+.stat-button::before {
+  content: "✨";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 20px;
+  opacity: 0;
+  transform: scale(0);
+  z-index: 10;
+}
+
+.stat-button:hover::before {
+  animation: stat-sparkle 1.5s ease-in-out infinite;
+}
+
+.stat-button:hover {
+  animation: stat-float 2s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.3) 100%);
+  border-color: rgba(139, 92, 246, 0.7);
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Animation de pulsation pour l'effet de curseur */
+@keyframes cursor-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(168, 85, 247, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+  }
+}
+
+.cursor-pulse {
+  animation: cursor-pulse 1.5s infinite;
+}
+
+/* Effet de traînée pour le curseur */
+@keyframes trail {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+.cursor-trail {
+  animation: trail 0.5s ease-out forwards;
+}
