@@ -502,7 +502,7 @@ function AboutSection({ nbrprojets }: { nbrprojets: number }) {
             className="relative"
           >
             <div
-              className="w-96 h-96 bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element"
+              className="w-96 h-96 bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group"
               data-section="about"
             >
               <motion.div
@@ -915,7 +915,6 @@ function ContactSection() {
               whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
               transition={{ delay: 0.8 + index * 0.2, type: "spring" }}
               whileHover={{ y: -10, scale: 1.05 }}
-              className="interactive-element"
               data-section="contact"
             >
               <Button

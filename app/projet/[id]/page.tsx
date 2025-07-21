@@ -395,7 +395,7 @@ export default function ProjectPage({ params }: PageProps) {
           {/* right – quick facts + fonctionnalités */}
           <div className="space-y-6">
             {/* Informations du projet */}
-            <Card className="bg-slate-800/50 border-blue-500/20 rounded-2xl border backdrop-blur-sm interactive-element">
+            <Card className="bg-slate-800/50 border-blue-500/20 rounded-2xl border backdrop-blur-sm">
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-lg font-semibold text-blue-400 mb-4">Informations</h3>
                 <Fact label="Année" value={project.year} />
@@ -405,7 +405,7 @@ export default function ProjectPage({ params }: PageProps) {
             </Card>
 
             {/* Fonctionnalités */}
-            <Card className="bg-slate-800/50 border-purple-500/20 rounded-2xl border backdrop-blur-sm interactive-element">
+            <Card className="bg-slate-800/50 border-purple-500/20 rounded-2xl border backdrop-blur-sm">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-purple-400 mb-4">Fonctionnalités</h3>
                 <ul className="space-y-2">
@@ -437,7 +437,7 @@ export default function ProjectPage({ params }: PageProps) {
                 whileInView={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
-                className="relative group cursor-pointer rounded-2xl interactive-element project-button"
+                className="relative group cursor-pointer rounded-2xl project-button"
                 onClick={() => router.push(`/projet/${otherProject.id}`)}
               >
                 <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden h-full min-h-[320px] flex flex-col">

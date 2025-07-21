@@ -1,7 +1,6 @@
 {
   "name": "portfolio-3d-professionnel",
   "version": "1.0.0",
-  "description": "Portfolio 3D professionnel avec Next.js, React Three Fiber et Framer Motion",
   "private": true,
   "scripts": {
     "dev": "next dev",

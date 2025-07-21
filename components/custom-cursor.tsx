@@ -30,7 +30,7 @@ export default function CustomCursor() {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      const hoverTarget = target.closest(".interactive-element, button, a, .absorb-cursor")
+      const hoverTarget = target.closest("button, a, .absorb-cursor")
 
       if (hoverTarget) {
         setIsHovering(true)
@@ -94,7 +94,6 @@ export default function CustomCursor() {
         body,
         button,
         a,
-        .interactive-element,
         .absorb-cursor {
           cursor: none !important;
         }
