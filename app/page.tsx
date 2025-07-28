@@ -17,102 +17,12 @@ import {
   Database,
   Smartphone,
   Server,
-  ExternalLink, ChevronLeft, ChevronRight
+  ExternalLink, ChevronLeft, ChevronRight, Eye, FileText
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import CustomCursor from "@/components/custom-cursor"
-
-const projects = [
-  {
-    id: "sensibilisation-ia",
-    title: "Sensibilisation à l'IA",
-    description: "Site de sensibilisation à l'intelligence artificielle avec des ressources éducatives",
-    tech: ["React", "Three.js", "Node.js", "PostgreSQL", ],
-    image: "/Screen_EasyIA.png",
-    link: "https://example.com",
-    date: "06/2025",
-    fullDescription:
-      "Une plateforme e-commerce révolutionnaire qui permet aux utilisateurs de visualiser les produits en 3D avant l'achat. Les clients peuvent faire pivoter les objets, zoomer et même les placer virtuellement dans leur espace grâce à la réalité augmentée.",
-    features: ["Visualisation 3D", "Réalité augmentée", "Panier d'achat", "Paiement sécurisé"],
-    screenshots: [
-      "/placeholder.svg?height=600&width=800&text=Screenshot+1",
-      "/placeholder.svg?height=600&width=800&text=Screenshot+2",
-    ],
-  },
-  {
-    id: "dashboard-analytics",
-    title: "Dashboard Analytics",
-    description: "Interface d'analyse de données avec graphiques interactifs et temps réel",
-    tech: ["Vue.js", "D3.js", "Python"],
-    image: "/placeholder.svg?height=300&width=400&text=Dashboard+Analytics",
-    link: "https://example.com",
-    date: "2023",
-    fullDescription:
-      "Un tableau de bord analytique puissant qui transforme les données brutes en insights visuels. Avec des graphiques interactifs et des mises à jour en temps réel, les utilisateurs peuvent prendre des décisions éclairées rapidement.",
-    features: ["Graphiques interactifs", "Données en temps réel", "Filtres avancés", "Exportation de rapports"],
-    screenshots: [
-      "/placeholder.svg?height=600&width=800&text=Dashboard+View",
-      "/placeholder.svg?height=600&width=800&text=Analytics+Charts",
-    ],
-  },
-  {
-    id: "app-mobile-ar",
-    title: "App Mobile AR",
-    description: "Application mobile de réalité augmentée pour l'e-commerce",
-    tech: ["React Native", "ARKit", "Firebase"],
-    image: "/placeholder.svg?height=300&width=400&text=App+Mobile+AR",
-    link: "https://example.com",
-    date: "2023",
-    fullDescription:
-      "Une application mobile innovante qui utilise la réalité augmentée pour permettre aux utilisateurs de visualiser des produits dans leur environnement réel avant l'achat. Compatible avec iOS et Android.",
-    features: ["Placement virtuel", "Mesures précises", "Catalogue de produits", "Partage social"],
-    screenshots: [
-      "/placeholder.svg?height=600&width=800&text=AR+View",
-      "/placeholder.svg?height=600&width=800&text=Product+Catalog",
-    ],
-  },
-  {
-    id: "site-web-creatif",
-    title: "Site Web Créatif",
-    description: "Site web avec animations avancées et design moderne",
-    tech: ["Next.js", "Framer Motion", "Tailwind"],
-    image: "/placeholder.svg?height=300&width=400&text=Site+Web+Créatif",
-    link: "https://example.com",
-    date: "2022",
-    fullDescription:
-      "Un site web à la pointe de la technologie avec des animations fluides et un design moderne. L'expérience utilisateur a été soigneusement conçue pour captiver les visiteurs et les inciter à l'action.",
-    features: ["Animations avancées", "Design responsive", "Performance optimisée", "SEO avancé"],
-    screenshots: [
-      "/placeholder.svg?height=600&width=800&text=Homepage",
-      "/placeholder.svg?height=600&width=800&text=Portfolio+Section",
-    ],
-  },
-  {
-    id: "app-fitness",
-    title: "App Fitness",
-    description: "Application de fitness avec suivi personnalisé",
-    tech: ["React Native", "Firebase", "HealthKit"],
-    image: "/placeholder.svg?height=300&width=400&text=App+Fitness",
-    link: "https://example.com",
-    date: "2022",
-    fullDescription: "Application complète de fitness avec programmes personnalisés",
-    features: ["Suivi d'activité", "Programmes personnalisés", "Statistiques", "Communauté"],
-    screenshots: ["/placeholder.svg?height=600&width=800&text=Fitness+App"],
-  },
-  {
-    id: "plateforme-learning",
-    title: "Plateforme E-Learning",
-    description: "Plateforme d'apprentissage en ligne interactive",
-    tech: ["Next.js", "Prisma", "PostgreSQL"],
-    image: "/placeholder.svg?height=300&width=400&text=E-Learning",
-    link: "https://example.com",
-    date: "2021",
-    fullDescription: "Plateforme complète d'apprentissage avec cours interactifs",
-    features: ["Cours vidéo", "Quiz interactifs", "Certificats", "Progression"],
-    screenshots: ["/placeholder.svg?height=600&width=800&text=Learning+Platform"],
-  },
-]
+import { projects } from "@/lib/project" 
 
 export default function Portfolio() {
   const [currentSection, setCurrentSection] = useState(0)
@@ -138,25 +48,48 @@ export default function Portfolio() {
     }
   }
 
-  // Gestion du défilement horizontal avec la molette de la souris - Sensibilité augmentée
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      // Vérifier si on est dans une zone de scroll spécifique
+      
       const target = e.target as HTMLElement
       if (target.closest(".skills-scroll-zone") || target.closest(".projects-scroll-zone")) {
-        return // Laisser le scroll local gérer
+        return 
       }
 
       if (containerRef.current) {
         e.preventDefault()
-        // Augmentation de la sensibilité x3
-        containerRef.current.scrollLeft += e.deltaY * 3
+        containerRef.current.scrollLeft += e.deltaY * 1.5
 
         // Mise à jour de la section active
-        const scrollLeft = containerRef.current.scrollLeft
-        const sectionWidth = containerRef.current.scrollWidth / sections.length
-        const newSection = Math.round(scrollLeft / sectionWidth)
-        setCurrentSection(newSection)
+        const container = containerRef.current
+        const sectionWidth = container.scrollWidth / sections.length
+        const currentScrollLeft = container.scrollLeft
+        const currentSection = Math.round(currentScrollLeft / sectionWidth)
+
+        // Déterminer la direction du scroll
+        if (e.deltaY > 0) {
+          // Scroll vers la droite - section suivante
+          const nextSection = Math.min(currentSection + 1, sections.length - 1)
+          const targetScrollLeft = nextSection * sectionWidth
+
+          container.scrollTo({
+            left: targetScrollLeft,
+            behavior: "smooth",
+          })
+
+          setCurrentSection(nextSection)
+        } else {
+          // Scroll vers la gauche - section précédente
+          const prevSection = Math.max(currentSection - 1, 0)
+          const targetScrollLeft = prevSection * sectionWidth
+
+          container.scrollTo({
+            left: targetScrollLeft,
+            behavior: "smooth",
+          })
+
+          setCurrentSection(prevSection)
+        }
       }
     }
 
@@ -245,7 +178,9 @@ export default function Portfolio() {
           const scrollLeft = e.currentTarget.scrollLeft
           const sectionWidth = e.currentTarget.scrollWidth / sections.length
           const newSection = Math.round(scrollLeft / sectionWidth)
-          setCurrentSection(newSection)
+          if (newSection !== currentSection) {
+            setCurrentSection(newSection)
+          }
         }}
       >
         {/* Hero Section */}
@@ -793,37 +728,42 @@ function ProjectsSection() {
                   }}
                   data-section="projects"
                 >
-                  <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden group h-full cursor-pointer">
+                  <Card className="flex flex-col bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden group h-full cursor-pointer min-h-[420px]">
                     <div className="relative overflow-hidden">
                       <img
-                        src={project.image || "/placeholder.svg"}
+                        src={project.gallery[0] || "/placeholder.svg"}
                         alt={project.title}
-                        className="w-full h-32 object-cover transition-transform group-hover:scale-110"
+                        className="w-full h-30 sm:h-30 md:h-40 lg:h-40 object-cover transition-transform group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     </div>
 
-                    <CardContent className="p-6">
-                      <h3 className="text-2xl font-bold text-white mb-3">{project.title}</h3>
-                      <p className="text-slate-300 mb-4 text-sm">{project.description}</p>
+                    <CardContent className="flex flex-col flex-1 justify-between p-6">
+                      <div>
+                        <h3 className="text-2xl font-bold text-white mb-3">{project.title}</h3>
+                        <p className="text-slate-300 mb-4 text-sm">{project.subtitle}</p>
 
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tech.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-indigo-600/20 rounded-full text-sm text-blue-400 border border-blue-500/30"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {project.tech.slice(0, 3).map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-indigo-600/20 rounded-full text-sm text-blue-400 border border-blue-500/30"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
-                      <Button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 group">
-                        <span className="flex items-center justify-center gap-2">
-                          {project.date}
-                          <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      </Button>
+                      {/* Bouton fixé à une distance précise du bas */}
+                      <div className="mt-auto pt-4">
+                        <Button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 group">
+                          <span className="flex items-center justify-center gap-2">
+                            {project.year}
+                            <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </span>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -866,7 +806,7 @@ function ContactSection() {
       icon: <Github className="h-6 w-6" />,
       label: "GitHub",
       color: "from-slate-500 to-slate-700",
-      href: "https://github.com/gautierhoarau", // ← remplace par ton GitHub
+      href: "https://github.com/gautierhoarau",
     },
     {
       icon: <Linkedin className="h-6 w-6" />,
@@ -926,6 +866,192 @@ function ContactSection() {
               </Button>
             </motion.a>
           ))}
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="relative mt-12"
+        >
+          <motion.button
+            onClick={() => window.open("/CV.pdf", "_blank")}
+            className="group relative overflow-hidden bg-slate-900/90 backdrop-blur-sm border border-slate-700/50 text-white px-12 py-6 rounded-xl font-semibold text-lg shadow-2xl hover:border-blue-500/50 transition-all duration-500"
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            data-section="contact"
+          >
+            {/* Grille de fond subtile */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="grid grid-cols-8 grid-rows-4 h-full w-full">
+                {[...Array(32)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="border border-blue-400/20"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.3, 0] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: i * 0.1,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Effet de scan horizontal */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent opacity-0 group-hover:opacity-100"
+              animate={{
+                x: ["-100%", "100%"],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }}
+            />
+
+            {/* Coins technologiques */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-blue-400/60"></div>
+            <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-blue-400/60"></div>
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-blue-400/60"></div>
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-blue-400/60"></div>
+
+            {/* Contenu principal */}
+            <div className="relative z-10 flex items-center justify-center gap-4">
+              <motion.div
+                className="flex items-center gap-3"
+                whileHover={{ x: -5 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <div className="relative">
+                  <FileText className="h-6 w-6 text-blue-400" />
+                  <motion.div
+                    className="absolute inset-0 bg-blue-400/20 rounded-full"
+                    animate={{
+                      scale: [1, 1.5, 1],
+                      opacity: [0.5, 0, 0.5],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                    }}
+                  />
+                </div>
+                <span className="text-slate-200 group-hover:text-white transition-colors">Curriculum Vitae</span>
+              </motion.div>
+
+              <motion.div
+                className="w-px h-8 bg-gradient-to-b from-transparent via-slate-600 to-transparent"
+                animate={{
+                  scaleY: [1, 1.5, 1],
+                  opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Number.POSITIVE_INFINITY,
+                }}
+              />
+
+              <motion.div
+                className="flex items-center gap-3"
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <span className="text-slate-400 group-hover:text-blue-400 transition-colors text-sm font-mono">
+                  PREVIEW
+                </span>
+                <div className="relative">
+                  <Eye className="h-5 w-5 text-slate-400 group-hover:text-blue-400 transition-colors" />
+                  <motion.div
+                    className="absolute -inset-1 border border-blue-400/40 rounded"
+                    animate={{
+                      rotate: 360,
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "linear",
+                    }}
+                  />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Indicateurs de statut */}
+            <div className="absolute top-3 left-1/2 transform -translate-x-1/2 flex gap-1">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-1.5 h-1.5 rounded-full bg-blue-400/60"
+                  animate={{
+                    opacity: [0.3, 1, 0.3],
+                    scale: [0.8, 1.2, 0.8],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Effet de glow au hover */}
+            <motion.div
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              animate={{
+                background: [
+                  "linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1))",
+                  "linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1))",
+                  "linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1))",
+                ],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Number.POSITIVE_INFINITY,
+              }}
+            />
+          </motion.button>
+
+          {/* Éléments décoratifs autour du bouton */}
+          {[...Array(4)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-blue-400/80 rounded-full"
+              style={{
+                left: "50%",
+                top: "50%",
+              }}
+              animate={{
+                x: [0, Math.cos((i * 90 * Math.PI) / 180) * 100],
+                y: [0, Math.sin((i * 90 * Math.PI) / 180) * 100],
+                opacity: [0, 0.8, 0],
+                scale: [0, 1, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: i * 0.5,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+
+          {/* Lignes de connexion subtiles */}
+          <motion.div
+            className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-px h-6 bg-gradient-to-b from-transparent to-blue-400/40"
+            animate={{
+              scaleY: [0, 1, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: 1,
+            }}
+          />
         </motion.div>
       </div>
     </section>
