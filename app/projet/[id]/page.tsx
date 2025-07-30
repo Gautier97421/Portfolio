@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { ArrowLeft, Github, Globe, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react"
+import { ArrowLeft, Github, Globe, ChevronLeft, ChevronRight, ExternalLink, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import CustomCursor from "@/components/custom-cursor"
 import { use } from 'react';
 import { projects } from "@/lib/project" 
+import {translations } from "@/lib/traduction"
 /* -------------------------------------------------------------------------- */
 /*                                PROJECT DATA                                */
 /*    In a real app you would fetch this, but we hard-code it for the demo.   */
@@ -26,6 +27,10 @@ export default function ProjectPage({ params }: PageProps) {
   const router = useRouter()
   const [project, setProject] = useState<(typeof projects)[0] | null>(null)
   const [imgIndex, setImgIndex] = useState(0)
+  const [language, setLanguage] = useState<"fr" | "en">("fr")
+  const t = (key: string): string => {
+    return translations[language][key as keyof typeof translations.fr] as string;
+  }
 
   /* ------------------------- load / redirect on error ------------------------ */
   useEffect(() => {
@@ -55,6 +60,9 @@ export default function ProjectPage({ params }: PageProps) {
   }, [params, router]);
 
   if (!project) return null;
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === "fr" ? "en" : "fr"))
+  }
 
   const otherProjects = projects.filter((p) => p.id !== project.id).slice(0, 3)
   return (
@@ -64,6 +72,15 @@ export default function ProjectPage({ params }: PageProps) {
       {/* Sticky header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+          <motion.button
+            onClick={toggleLanguage}
+            className="nav-button flex gap-2 px-3 py-2 rounded-2xl font-medium transition-all border border-transparent text-gray-300 hover:text-white border-gray-600"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Languages className="h-4 w-4" />
+            <span className="text-sm">{t("switchLanguage")}</span>
+          </motion.button>
           <Button
             variant="ghost"
             onClick={() => router.push("/")}
@@ -112,7 +129,7 @@ export default function ProjectPage({ params }: PageProps) {
 
         {/* Technologies overlay - en bas à gauche de l'image */}
         <div className="absolute bottom-6 left-6 z-20">
-          <div className="flex flex-wrap gap-2 max-w-md">
+          <div className="flex gap-2">
             {project.tech.map((tech, index) => (
               <motion.span
                 key={tech}

@@ -1,3 +1,5 @@
+// app/page.tsx
+
 "use client"
 
 import { useRef, useState, useEffect } from "react"
@@ -17,25 +19,37 @@ import {
   Database,
   Smartphone,
   Server,
-  ExternalLink, ChevronLeft, ChevronRight, Eye, FileText
+  ExternalLink, ChevronLeft, ChevronRight, Eye, FileText, Languages
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import CustomCursor from "@/components/custom-cursor"
 import { projects } from "@/lib/project" 
+import {translations } from "@/lib/traduction"
+
+const allGalleryImages = projects
+  .flatMap(p => p.gallery)
+  .filter(img => img && !img.includes("placeholder"))
+  .sort(() => 0.5 - Math.random());
+
 
 export default function Portfolio() {
   const [currentSection, setCurrentSection] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollXProgress } = useScroll({ container: containerRef })
+  const [language, setLanguage] = useState<"fr" | "en">("fr")
+  const t = (key: string): string => {
+    return translations[language][key as keyof typeof translations.fr] as string;
+  }
+
   const nbrprojets = projects.length
 
   const sections = [
-    { id: "hero", title: "Accueil" },
-    { id: "about", title: "À propos" },
-    { id: "skills", title: "Compétences" },
-    { id: "projects", title: "Projets" },
-    { id: "contact", title: "Contact" },
+    { id: "hero", title: t("home") },
+    { id: "about", title: t("about") },
+    { id: "skills", title: t("skills") },
+    { id: "projects", title: t("projects") },
+    { id: "contact", title: t("contact") },
   ]
 
   const scrollToSection = (index: number) => {
@@ -46,6 +60,9 @@ export default function Portfolio() {
         behavior: "smooth",
       })
     }
+  }
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === "fr" ? "en" : "fr"))
   }
 
   useEffect(() => {
@@ -113,13 +130,33 @@ export default function Portfolio() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 p-6">
         <div className="flex justify-between items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
-          >
-            Portfolio
-          </motion.div>
+          {/* Groupe à gauche : Portfolio + langue */}
+          <div className="flex items-center gap-4">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+            >
+              {t("portfolioTitle")}
+            </motion.div>
+
+            <motion.button
+              onClick={toggleLanguage}
+                className={`nav-button flex gap-2 px-3 py-2 rounded-2xl font-medium transition-all border border-transparent ${
+                  currentSection === -1
+                    ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                    : "text-gray-300 hover:text-white border-gray-600"
+                }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              data-section="language"
+            >
+              <Languages className="h-4 w-4" />
+              <span className="text-sm">{t("switchLanguage")}</span>
+            </motion.button>
+          </div>
+
+          {/* Groupe à droite : les boutons de navigation */}
           <div className="flex gap-4">
             {sections.map((section, index) => (
               <motion.button
@@ -184,19 +221,19 @@ export default function Portfolio() {
         }}
       >
         {/* Hero Section */}
-        <HeroSection />
+        <HeroSection t={t} />
 
         {/* About Section */}
-        <AboutSection nbrprojets={nbrprojets} />
+        <AboutSection nbrprojets={nbrprojets} t={t} />
 
         {/* Skills Section */}
-        <SkillsSection />
+        <SkillsSection t={t} />
 
         {/* Projects Section */}
-        <ProjectsSection />
+        <ProjectsSection t={t} />
 
         {/* Contact Section */}
-        <ContactSection />
+        <ContactSection t={t} />
       </div>
     </div>
   )
@@ -254,28 +291,35 @@ function SubtleParticles() {
   return <group ref={mesh}>{particles}</group>
 }
 
-function HeroSection() {
-  const name = "Gautier Hoarau"
+function HeroSection({ t }: { t: (key: string) => string }) {
+  const name = t("name")
   const [displayedName, setDisplayedName] = useState("")
   const [showSubtitle, setShowSubtitle] = useState(false)
+  const [isCursorVisible, setIsCursorVisible] = useState(true)
   const [showGrid, setShowGrid] = useState(false)
 
-  // Animation lettre par lettre améliorée
   useEffect(() => {
     let currentIndex = 0
-    const timer = setInterval(() => {
+    const interval = setInterval(() => {
       if (currentIndex < name.length) {
         setDisplayedName(name.substring(0, currentIndex + 1))
         currentIndex++
       } else {
-        clearInterval(timer)
+        clearInterval(interval)
         setShowSubtitle(true)
         setTimeout(() => setShowGrid(true), 500)
       }
     }, 100)
 
-    return () => clearInterval(timer)
+    return () => clearInterval(interval)
   }, [name])
+
+  useEffect(() => {
+    const blink = setInterval(() => {
+      setIsCursorVisible(prev => !prev)
+    }, 500)
+    return () => clearInterval(blink)
+  }, [])
 
   return (
     <section
@@ -309,8 +353,7 @@ function HeroSection() {
           {displayedName}
           <motion.span
             animate={{ opacity: [1, 0] }}
-            transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY }}
-            className="text-blue-400"
+            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
           >
             |
           </motion.span>
@@ -320,7 +363,7 @@ function HeroSection() {
           {showSubtitle && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
               <motion.p className="text-2xl mb-8 text-slate-300">
-                Ingénieur informatique spécialisé dans l'Intelligence Artificielle
+                {t("subtitle")}
               </motion.p>
 
               {/* Ligne professionnelle */}
@@ -338,26 +381,23 @@ function HeroSection() {
   )
 }
 
-function AboutSection({ nbrprojets }: { nbrprojets: number }) {
+function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) => string }) {
   const [activeTab, setActiveTab] = useState(0)
-
   const tabs = [
     {
-      title: "Expertise",
-      content:
-        "Développeur Full-Stack avec plus de 5 ans d'expérience dans la conception et le développement d'applications web modernes. Spécialisé dans les technologies JavaScript/TypeScript, avec une expertise approfondie en React, Node.js et architectures cloud.",
+      title: t("expertise"),
+      content: t("expertiseContent"),
     },
     {
-      title: "Approche",
-      content:
-        "Mon approche se concentre sur la création de solutions robustes, scalables et maintenables. Je privilégie les bonnes pratiques de développement, l'architecture clean code et l'optimisation des performances pour garantir des applications de qualité professionnelle.",
+      title: t("approach"),
+      content: t("approachContent"),
     },
     {
-      title: "Objectifs",
-      content:
-        "Contribuer à des projets innovants en apportant mon expertise technique et ma vision stratégique. Mon objectif est d'accompagner les entreprises dans leur transformation digitale en développant des solutions sur mesure qui répondent à leurs enjeux métier.",
+      title: t("objectives"),
+      content: t("objectivesContent"),
     },
   ]
+
 
   return (
     <section
@@ -373,7 +413,7 @@ function AboutSection({ nbrprojets }: { nbrprojets: number }) {
         >
           <div>
             <h2 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
-              À propos
+              {t("aboutTitle")}
             </h2>
 
             {/* Tabs Navigation avec animation */}
@@ -410,9 +450,9 @@ function AboutSection({ nbrprojets }: { nbrprojets: number }) {
             {/* Stats avec animation violette */}
             <div className="grid grid-cols-3 gap-6">
               {[
-                { number: nbrprojets, label: "Projets" },
-                { number: "5+", label: "Années" },
-                { number: "100%", label: "Motivation" },
+                { number: nbrprojets, label: t("projects") },
+                { number: "4+", label: t("years") },
+                { number: "100%", label: t("Motivation") },
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -436,33 +476,53 @@ function AboutSection({ nbrprojets }: { nbrprojets: number }) {
             transition={{ duration: 1, delay: 0.3 }}
             className="relative"
           >
-            <div
-              className="w-96 h-96 bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group"
-              data-section="about"
-            >
-              <motion.div
-                className="text-8xl"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-              >
-                💼
-              </motion.div>
+            <div className="w-full max-w-sm sm:max-w-md md:max-w-3x1 lg:max-w-3xl xl:max-w-3xl h-60 sm:h-72 md:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              <div className="absolute inset-4">
+                {/* Images dynamiques avec animation */}
+                {allGalleryImages.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    className="absolute inset-0 rounded-xl overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.8, rotateY: 90 }}
+                    animate={{
+                      opacity: [0, 1, 1, 0],
+                      scale: [0.8, 1, 1, 0.8],
+                      rotateY: [90, 0, 0, -90],
+                      z: [0, 50, 50, 0],
+                    }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      delay: index * 10,
+                      ease: "easeInOut",
+                    }}
+                    style={{ transformStyle: "preserve-3d" }}
+                  >
+                    <img
+                      src={image || "/placeholder.svg"}
+                      alt={`Projet ${index + 1}`}
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-indigo-900/40 rounded-xl" />
+                  </motion.div>
+                ))}
+              </div>
 
-              {/* Éléments géométriques professionnels */}
-              {[...Array(4)].map((_, i) => (
+              {/* Particules flottantes autour */}
+              {[...Array(12)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-3 h-3 bg-blue-400/60 rounded-sm"
+                  className="absolute w-2 h-2 bg-blue-400/70 rounded-full"
                   animate={{
-                    x: [0, Math.cos((i * 90 * Math.PI) / 180) * 80],
-                    y: [0, Math.sin((i * 90 * Math.PI) / 180) * 80],
-                    rotate: 360,
+                    x: [Math.cos((i * 30 * Math.PI) / 180) * 120, Math.cos(((i * 30 + 180) * Math.PI) / 180) * 290],
+                    y: [Math.sin((i * 30 * Math.PI) / 180) * 120, Math.sin(((i * 30 + 180) * Math.PI) / 180) * 290],
+                    opacity: [0.3, 0.8, 0.3],
+                    scale: [0.5, 1.2, 0.5],
                   }}
                   transition={{
-                    duration: 4,
+                    duration: 4 + i * 0.2,
                     repeat: Number.POSITIVE_INFINITY,
-                    delay: i * 1,
                     ease: "easeInOut",
+                    delay: i * 0.3,
                   }}
                   style={{
                     left: "50%",
@@ -471,6 +531,49 @@ function AboutSection({ nbrprojets }: { nbrprojets: number }) {
                   }}
                 />
               ))}
+
+              {/* Cercles concentriques animés */}
+              {/* {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute border border-blue-400/30 rounded-full"
+                  animate={{
+                    scale: [1, 1.5, 1],
+                    opacity: [0.5, 0.2, 0.5],
+                    rotate: 360,
+                  }}
+                  transition={{
+                    duration: 6 + i * 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                    delay: i * 0.8,
+                  }}
+                  style={{
+                    width: `${(i + 1) * 100}px`,
+                    height: `${(i + 1) * 100}px`,
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                />
+              ))} */}
+
+              {/* Effet de brillance qui traverse */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                animate={{
+                  x: ["-100%", "100%"],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "linear",
+                  repeatDelay: 2,
+                }}
+                style={{
+                  transform: "skewX(-20deg)",
+                }}
+              />
             </div>
           </motion.div>
         </motion.div>
@@ -479,31 +582,126 @@ function AboutSection({ nbrprojets }: { nbrprojets: number }) {
   )
 }
 
-function SkillsSection() {
+function SkillsSection({ t }: { t: (key: string) => string }) {
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0)
 
   const skills = [
-    { name: "Unity", level: 80, icon: <Code className="h-6 w-6" />, color: "from-red-400 to-red-600", description: "C# – Mécanique 3D, UI Canvas" },
-    { name: "React", level: 95, icon: <Code className="h-6 w-6" />, color: "from-blue-400 to-blue-600", description: "React, Tailwind, Shadcn/UI" },
-    { name: "TypeScript", level: 92, icon: <Zap className="h-6 w-6" />, color: "from-indigo-400 to-indigo-600", description: "C# – Mécanique 3D, UI Canvas" },
-    { name: "Node.js", level: 90, icon: <Globe className="h-6 w-6" />, color: "from-green-400 to-green-600", description: "C# – Mécanique 3D, UI Canvas" },
-    { name: "NLP", level: 88, icon: <Palette className="h-6 w-6" />, color: "from-slate-400 to-slate-600", description: "RAG, Résumés, Recherche sémantique" },
-    { name: "Traitement de fichiers", level: 85, icon: <Database className="h-6 w-6" />, color: "from-blue-500 to-blue-700", description: "PDF → texte, chunking, normalisation" },
-    { name: "React Native", level: 82, icon: <Smartphone className="h-6 w-6" />, color: "from-indigo-500 to-indigo-700", description: "C# – Mécanique 3D, UI Canvas" },
-    { name: "BDD", level: 80, icon: <Server className="h-6 w-6" />, color: "from-orange-400 to-orange-600", description: "PostgreSQL, Supabase, pgvector" },
-    { name: "Docker", level: 78, icon: <Code className="h-6 w-6" />, color: "from-gray-400 to-gray-600", description: "C# – Mécanique 3D, UI Canvas" },
-    { name: "RAG", level: 75, icon: <Code className="h-6 w-6" />, color: "from-purple-400 to-purple-600", description: "Recherche augmentée par IA locale" },
-    { name: "CI/CD", level: 70, icon: <Code className="h-6 w-6" />, color: "from-yellow-400 to-yellow-600", description: "C# – Mécanique 3D, UI Canvas" },
-    { name: "Python", level: 68, icon: <Code className="h-6 w-6" />, color: "from-teal-400 to-teal-600", description: "FastAPI, NLP, scraping, PPO" },
-    { name: "Deep Learning", level: 65, icon: <Code className="h-6 w-6" />, color: "from-pink-400 to-pink-600", description: "C# – Mécanique 3D, UI Canvas" },
+    { 
+      name: "Unity", 
+      level: 80, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-red-400 to-red-600", 
+      description: t("UnityS") 
+    },
+    { 
+      name: "Databases", 
+      level: 80, 
+      icon: <Server className="h-6 w-6" />, 
+      color: "from-orange-400 to-orange-600", 
+      description: t("DatabaseS")
+    },
+    { 
+      name: "TypeScript", 
+      level: 72, 
+      icon: <Zap className="h-6 w-6" />, 
+      color: "from-indigo-400 to-indigo-600", 
+      description: t("TypeSCriptS")
+    },
+    { 
+      name: "Document Processing", 
+      level: 85, 
+      icon: <Database className="h-6 w-6" />, 
+      color: "from-blue-500 to-blue-700", 
+      description: t("ProcessingS")
+    },
+    { 
+      name: "React", 
+      level: 75, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-blue-400 to-blue-600", 
+      description: t("ReactS")
+    },
+    { 
+      name: "Node.js", 
+      level: 90, 
+      icon: <Globe className="h-6 w-6" />, 
+      color: "from-green-400 to-green-600", 
+      description: t("NodeS")
+    },
+    { 
+      name: "NLP", 
+      level: 80, 
+      icon: <Palette className="h-6 w-6" />, 
+      color: "from-slate-400 to-slate-600", 
+      description: t("NLPS")
+    },
+    { 
+      name: "Docker", 
+      level: 68, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-red-400 to-red-600", 
+      description: t("DockerS")
+    },
+    { 
+      name: "RAG", 
+      level: 82, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-purple-400 to-purple-600", 
+      description: t("RAGS")
+    },
+    { 
+      name: "CI/CD", 
+      level: 70, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-yellow-400 to-yellow-600", 
+      description: t("CICDS")
+    },
+    { 
+      name: "Python", 
+      level: 68, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-teal-400 to-teal-600", 
+      description: t("PythonS")
+    },
+    { 
+      name: "Deep Learning", 
+      level: 65, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-pink-400 to-pink-600", 
+      description: t("DeepS") 
+    },
+    { 
+      name: "Three.js / React Three Fiber", 
+      level: 85, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-cyan-400 to-cyan-600", 
+      description: t("ThreeS") 
+    },
+    { 
+      name: "GitHub", 
+      level: 90, 
+      icon: <Code className="h-6 w-6" />, 
+      color: "from-gray-600 to-gray-800", 
+      description: t("GitS")
+    },
+    { 
+      name: "UI/UX Design", 
+      level: 80, 
+      icon: <Palette className="h-6 w-6" />, 
+      color: "from-pink-500 to-pink-700", 
+      description: t("DesignS")
+    },
   ]
 
   // Gestion du scroll pour les compétences - Zone délimitée
-  const skillsPerPage = 2
-  const totalSkillPages = Math.ceil(skills.length / skillsPerPage)
+  const skillsPerPage = 4; // tu affiches 4 skills par page d'après slice
+  const totalSkillPages = Math.ceil(skills.length / skillsPerPage);
 
-  // Obtenir les 4 compétences actuelles à afficher
-  const visibleSkills = skills.length <= 4 ? skills : skills.slice(currentSkillIndex, currentSkillIndex + 4)
+  // visibleSkills prend la "page" courante
+  const visibleSkills = skills.slice(
+    currentSkillIndex * skillsPerPage, 
+    currentSkillIndex * skillsPerPage + skillsPerPage
+  );
 
   return (
     <section
@@ -516,7 +714,7 @@ function SkillsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           className="text-6xl font-bold text-center mb-14 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
-          Compétences
+          {t("skillsTitle")}
         </motion.h2>
         <div
           className="w-full max-w-7xl mx-auto border-2 border-indigo-500/20 rounded-2xl p-8 bg-slate-800/20 backdrop-blur-sm relative"
@@ -606,7 +804,7 @@ function SkillsSection() {
   )
 }
 
-function ProjectsSection() {
+function ProjectsSection({ t }: { t: (key: string) => string }) {
   const router = useRouter()
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const projectsScrollRef = useRef<HTMLDivElement>(null)
@@ -667,7 +865,7 @@ function ProjectsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           className="text-6xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
-          Projets
+          {t("projectsTitle")}
         </motion.h2>
 
         <div
@@ -794,7 +992,7 @@ function ProjectsSection() {
   )
 }
 
-function ContactSection() {
+function ContactSection({ t }: { t: (key: string) => string }) {
   const contacts = [
     {
       icon: <Mail className="h-6 w-6" />,
@@ -827,7 +1025,7 @@ function ContactSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
-          Contact
+          {t("contactTitle")}
         </motion.h2>
 
         <motion.p
@@ -836,7 +1034,7 @@ function ContactSection() {
           transition={{ delay: 0.3 }}
           className="text-xl text-slate-300 mb-12"
         >
-          Discutons de votre prochain projet ensemble
+          {t("contactSubtitle")}
         </motion.p>
 
         <motion.div
@@ -874,7 +1072,7 @@ function ContactSection() {
           className="relative mt-12"
         >
           <motion.button
-            onClick={() => window.open("/CV.pdf", "_blank")}
+            onClick={() => window.open(t("downloadCV"), "_blank")}
             className="group relative overflow-hidden bg-slate-900/90 backdrop-blur-sm border border-slate-700/50 text-white px-12 py-6 rounded-xl font-semibold text-lg shadow-2xl hover:border-blue-500/50 transition-all duration-500"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
