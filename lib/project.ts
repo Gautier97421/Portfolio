@@ -1,6 +1,6 @@
 import { translations } from "@/lib/traduction"
 
-export const getProjects  = (language: "fr" | "en") => {
+export const getProjects  = (language: "fr" | "en" | "de") => {
   const t = (key: keyof typeof translations.fr) => translations[language][key]
   return [
   {

@@ -37,7 +37,7 @@ export default function Portfolio() {
   const [currentSection, setCurrentSection] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollXProgress } = useScroll({ container: containerRef })
-  const [language, setLanguage] = useState<"fr" | "en">("fr")
+  const [language, setLanguage] = useState<"fr" | "en" | "de" >("fr")
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
@@ -62,8 +62,13 @@ export default function Portfolio() {
     }
   }
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "fr" ? "en" : "fr"))
+    setLanguage((prev) => {
+      if (prev === "fr") return "en"
+      if (prev === "en") return "de"
+      return "fr"
+    })
   }
+
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -404,14 +409,14 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
       className="min-w-full h-full flex items-center justify-center p-12"
       data-section="about"
     >
-      <div className="max-w-6xl w-full">
+      <div className="max-w-[100rem] xl:max-w-[100rem] w-full">
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          className="grid grid-cols-1 lg:grid-cols-2 items-center mx-auto"
         >
-          <div>
+          <div className="max-w-sm sm:max-w-sm md:max-w-md lg:max-w-md xl:max-w-3xl 2xl:max-w-6xl w-full">
             <h2 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
               {t("aboutTitle")}
             </h2>
@@ -474,9 +479,11 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
             initial={{ opacity: 0, rotate: -5, scale: 0.9 }}
             whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="relative"
+            className="relative w-full max-w-8xl mx-auto" 
           >
-            <div className="w-full max-w-sm sm:max-w-md md:max-w-3x1 lg:max-w-3xl xl:max-w-3xl h-60 sm:h-72 md:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              <div className="absolute inset-4">
+
+            <div className="w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-7xl xl:max-w-3xl h-60 sm:h-72 md:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              
+              <div className="absolute inset-4">
                 {/* Images dynamiques avec animation */}
                 {allGalleryImages.map((image, index) => (
                   <motion.div
@@ -531,33 +538,6 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
                   }}
                 />
               ))}
-
-              {/* Cercles concentriques animés */}
-              {/* {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute border border-blue-400/30 rounded-full"
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.5, 0.2, 0.5],
-                    rotate: 360,
-                  }}
-                  transition={{
-                    duration: 6 + i * 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                    delay: i * 0.8,
-                  }}
-                  style={{
-                    width: `${(i + 1) * 100}px`,
-                    height: `${(i + 1) * 100}px`,
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                />
-              ))} */}
-
               {/* Effet de brillance qui traverse */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -705,7 +685,7 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
 
   return (
     <section
-      className="min-w-full h-full flex items-center justify-center p-12"
+      className="min-w-full h-full flex items-center justify-center p-14"
       data-section="skills"
     >
       <div className="w-full">
@@ -761,7 +741,7 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
                         <h3 className="text-2xl font-bold text-white">{skill.name}</h3>
                       </div>
                       {skill.description && (
-                        <p className="text-slate-300 text-sm mb-4 ml-1">{skill.description}</p>
+                        <p className="text-slate-300 text-sm mb-7 ml-1 h-[20px]">{skill.description}</p>
                       )}
                       <div className="relative">
                         <div className="w-full bg-slate-700 rounded-full h-3">
