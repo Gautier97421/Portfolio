@@ -27,11 +27,28 @@ import CustomCursor from "@/components/custom-cursor"
 import { projects } from "@/lib/project" 
 import {translations } from "@/lib/traduction"
 
+//const isMobile = typeof window !== "undefined" && window.innerWidth <= 768
+
 const allGalleryImages = projects
   .flatMap(p => p.gallery)
   .filter(img => img && !img.includes("placeholder"))
   .sort(() => 0.5 - Math.random());
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768); 
+    }
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
+}
 
 export default function Portfolio() {
   const [currentSection, setCurrentSection] = useState(0)
@@ -68,7 +85,16 @@ export default function Portfolio() {
       return "fr"
     })
   }
+  // const [isMobile, setIsMobile] = useState(false)
 
+  // useEffect(() => {
+  //   const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+  //   checkMobile()
+  //   window.addEventListener("resize", checkMobile)
+  //   return () => window.removeEventListener("resize", checkMobile)
+  // }, [])
+
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -128,58 +154,80 @@ export default function Portfolio() {
   }, [sections.length])
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white overflow-hidden relative">
+    <div className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white overflow-x-hidden overflow-y-auto relative">
       {/* Curseur personnalisé */}
-      <CustomCursor />
+      {!isMobile && <CustomCursor />}
+
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 p-6">
-        <div className="flex justify-between items-center">
+      <nav className="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6 max-w-full">
+        <div className="flex items-center justify-between gap-y-4">
           {/* Groupe à gauche : Portfolio + langue */}
           <div className="flex items-center gap-4">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+              className="font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent text-2xl sm:text-4xl"
             >
               {t("portfolioTitle")}
             </motion.div>
 
-            <motion.button
-              onClick={toggleLanguage}
-                className={`nav-button flex gap-2 px-3 py-2 rounded-2xl font-medium transition-all border border-transparent ${
-                  currentSection === -1
-                    ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
-                    : "text-gray-300 hover:text-white border-gray-600"
-                }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              data-section="language"
-            >
-              <Languages className="h-4 w-4" />
-              <span className="text-sm">{t("switchLanguage")}</span>
-            </motion.button>
+            {!isMobile &&
+              <motion.button
+                onClick={toggleLanguage}
+                  className={`nav-button px-3 flex gap-2 py-2 rounded-2xl font-medium transition-all border border-transparent ${
+                    currentSection === -1
+                      ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                      : "text-gray-300 hover:text-white border-gray-600"
+                  }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                data-section="language"
+              >
+                <Languages className="h-4 w-4" />
+                <span className="text-sm">{t("switchLanguage")}</span>
+              </motion.button>
+            }
           </div>
 
           {/* Groupe à droite : les boutons de navigation */}
-          <div className="flex gap-4">
-            {sections.map((section, index) => (
-              <motion.button
-                key={section.id}
-                onClick={() => scrollToSection(index)}
-                className={`nav-button px-4 py-2 rounded-2xl font-medium transition-all border border-transparent ${
-                  currentSection === index
-                    ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
-                    : "text-gray-300 hover:text-white border-gray-600"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                data-section={section.id}
-              >
-                <span>{section.title}</span>
-              </motion.button>
-            ))}
-          </div>
+            <div className="flex gap-4">
+              {!isMobile && sections.map((section, index) => (
+                <motion.button
+                  key={section.id}
+                  onClick={() => scrollToSection(index)}
+                  className={`nav-button px-4 py-2 rounded-2xl font-medium transition-all border border-transparent ${
+                    currentSection === index
+                      ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                      : "text-gray-300 hover:text-white border-gray-600"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  data-section={section.id}
+                >
+                  <span className="text-sm sm:text-base">{section.title}</span>
+                </motion.button>
+              ))}
+            </div>
+            {isMobile &&
+              <div className="flex gap-4">
+              
+                <motion.button
+                  onClick={toggleLanguage}
+                    className={`nav-button px-3 flex gap-2 py-2 rounded-2xl font-medium transition-all border border-transparent mr-4 ${
+                      currentSection === -1
+                        ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                        : "text-gray-300 hover:text-white border-gray-600"
+                    }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  data-section="language"
+                >
+                  <Languages className="h-4 w-4" />
+                  <span className="text-sm">{t("switchLanguage")}</span>
+                </motion.button>  
+            </div>
+    }
         </div>
       </nav>
 
@@ -188,7 +236,6 @@ export default function Portfolio() {
         <Canvas
           camera={{ position: [0, 0, 10] }}
           onCreated={({ gl }) => {
-            // Gestion des erreurs WebGL
             gl.domElement.addEventListener("webglcontextlost", (e) => {
               e.preventDefault()
               console.warn("WebGL context lost, attempting to restore...")
@@ -298,6 +345,7 @@ function SubtleParticles() {
 
 function HeroSection({ t }: { t: (key: string) => string }) {
   const name = t("name")
+  const isMobile = useIsMobile();
   const [displayedName, setDisplayedName] = useState("")
   const [showSubtitle, setShowSubtitle] = useState(false)
   const [isCursorVisible, setIsCursorVisible] = useState(true)
@@ -325,69 +373,74 @@ function HeroSection({ t }: { t: (key: string) => string }) {
     }, 500)
     return () => clearInterval(blink)
   }, [])
-
+  const x = isMobile ? 50 : 250
   return (
-    <section
-      className="min-w-full h-full flex items-center justify-center relative overflow-hidden"
-      data-section="hero"
-    >
-      {/* Grille professionnelle */}
-      {showGrid && (
-        <div className="absolute inset-0 z-0">
-          <div className="grid grid-cols-12 grid-rows-8 h-full w-full">
-            {[...Array(96)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 0.1, scale: 1 }}
-                transition={{ duration: 0.5, delay: i * 0.005 }}
-                className="border border-slate-700/30"
-              />
-            ))}
-          </div>
+  <section
+    className="min-w-full h-full flex items-center justify-center relative overflow-hidden"
+    data-section="hero"
+  >
+    {/* Grille professionnelle */}
+    {showGrid && (
+      <div className="absolute inset-0 z-0">
+        <div className="grid grid-cols-6 grid-rows-6 h-full w-full">
+          {[...Array(36)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 0.1, scale: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.005 }}
+              className="border border-slate-700/30"
+            />
+          ))}
         </div>
-      )}
-
-      <div className="text-center z-10 relative">
-        <motion.h1
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-indigo-500 to-slate-300 bg-clip-text text-transparent relative"
-        >
-          {displayedName}
-          <motion.span
-            animate={{ opacity: [1, 0] }}
-            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-          >
-            |
-          </motion.span>
-        </motion.h1>
-
-        <AnimatePresence>
-          {showSubtitle && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <motion.p className="text-2xl mb-8 text-slate-300">
-                {t("subtitle")}
-              </motion.p>
-
-              {/* Ligne professionnelle */}
-              <motion.div
-                className="w-40 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"
-                initial={{ width: 0 }}
-                animate={{ width: 160 }}
-                transition={{ duration: 1, delay: 0.5 }}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </section>
-  )
+    )}
+
+    <div className="text-center z-10 relative px-4">
+      <motion.h1
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="text-6xl sm:text-6xl md:text-9xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-indigo-500 to-slate-300 bg-clip-text text-transparent relative"
+      >
+        {displayedName}
+        <motion.span
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+        >
+          |
+        </motion.span>
+      </motion.h1>
+
+      <AnimatePresence>
+        {showSubtitle && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.p className="text-xl sm:text-lg md:text-3xl mb-4 sm:mb-8 text-slate-300">
+              {t("subtitle")}
+            </motion.p>
+            {/* Ligne professionnelle */}
+            <motion.div
+              className="w-20 sm:w-50 md:w-50 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"
+              initial={{ width: 0 }}
+              animate={{ width: x }}
+              transition={{ duration: 1, delay: 0.5 }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  </section>
+);
+
 }
 
 function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) => string }) {
   const [activeTab, setActiveTab] = useState(0)
+  const isMobile = useIsMobile();
   const tabs = [
     {
       title: t("expertise"),
@@ -409,7 +462,7 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
       className="min-w-full h-full flex items-center justify-center p-12"
       data-section="about"
     >
-      <div className="max-w-[100rem] xl:max-w-[100rem] w-full">
+      <div className="max-w-[50rem] xl:max-w-[100rem] w-full">
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -417,17 +470,23 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
           className="grid grid-cols-1 lg:grid-cols-2 items-center mx-auto"
         >
           <div className="max-w-sm sm:max-w-sm md:max-w-md lg:max-w-md xl:max-w-3xl 2xl:max-w-6xl w-full">
-            <h2 className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
               {t("aboutTitle")}
             </h2>
 
             {/* Tabs Navigation avec animation */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex gap-2 mb-4 md:gap-4 md:mb-8">
               {tabs.map((tab, index) => (
                 <motion.button
                   key={index}
                   onClick={() => setActiveTab(index)}
-                  className={`about-button px-6 py-3 rounded-2xl font-semibold transition-all ${
+                  className={`text-sm md:text-xl about-button
+                    h-8 md:h-auto
+                    min-w-[70px]
+                    px-4 md:px-6
+                    py-2 md:py-3
+                    flex items-center justify-center
+                    rounded-2xl font-semibold transition-all text-center ${
                     activeTab === index
                       ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
                       : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600"
@@ -447,13 +506,13 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-lg text-slate-300 leading-relaxed mb-8"
+              className="text-sm md:text-xl text-slate-300 leading-relaxed mb-8"
             >
               {tabs[activeTab].content}
             </motion.div>
 
             {/* Stats avec animation violette */}
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-4 md:gap-10 mb-8 md:mb-0">
               {[
                 { number: nbrprojets, label: t("projects") },
                 { number: "4+", label: t("years") },
@@ -465,11 +524,11 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.2 }}
                   whileHover={{ scale: 1.1, rotate: 2 }}
-                  className="stat-button text-center p-4 bg-slate-800/50 rounded-lg border border-blue-500/30 backdrop-blur-sm"
+                  className="flex flex-col stat-button text-center items-center justify-center p-4 bg-slate-800/50 rounded-lg border border-blue-500/30 backdrop-blur-sm"
                   data-section="about"
                 >
-                  <div className="text-3xl font-bold text-blue-400 mb-2">{stat.number}</div>
-                  <div className="text-slate-300">{stat.label}</div>
+                  <div className="text-2xl md:text-3xl font-bold text-blue-400 mb-2">{stat.number}</div>
+                  <div className="text-md md:text-2xl">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -482,8 +541,8 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
             className="relative w-full max-w-8xl mx-auto" 
           >
 
-            <div className="w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-7xl xl:max-w-3xl h-60 sm:h-72 md:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              
-              <div className="absolute inset-4">
+            <div className="w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-7xl xl:max-w-3xl h-72 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              
+              <div className="absolute inset-2">
                 {/* Images dynamiques avec animation */}
                 {allGalleryImages.map((image, index) => (
                   <motion.div
@@ -513,31 +572,31 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
                   </motion.div>
                 ))}
               </div>
-
-              {/* Particules flottantes autour */}
-              {[...Array(12)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-2 h-2 bg-blue-400/70 rounded-full"
-                  animate={{
-                    x: [Math.cos((i * 30 * Math.PI) / 180) * 120, Math.cos(((i * 30 + 180) * Math.PI) / 180) * 290],
-                    y: [Math.sin((i * 30 * Math.PI) / 180) * 120, Math.sin(((i * 30 + 180) * Math.PI) / 180) * 290],
-                    opacity: [0.3, 0.8, 0.3],
-                    scale: [0.5, 1.2, 0.5],
-                  }}
-                  transition={{
-                    duration: 4 + i * 0.2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                    delay: i * 0.3,
-                  }}
-                  style={{
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                />
-              ))}
+              
+                {/* Particules flottantes autour */}
+                {!isMobile && [...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 bg-blue-400/70 rounded-full"
+                    animate={{
+                      x: [Math.cos((i * 30 * Math.PI) / 180) * 120, Math.cos(((i * 30 + 180) * Math.PI) / 180) * 290],
+                      y: [Math.sin((i * 30 * Math.PI) / 180) * 120, Math.sin(((i * 30 + 180) * Math.PI) / 180) * 290],
+                      opacity: [0.3, 0.8, 0.3],
+                      scale: [0.5, 1.2, 0.5],
+                    }}
+                    transition={{
+                      duration: 4 + i * 0.2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "easeInOut",
+                      delay: i * 0.3,
+                    }}
+                    style={{
+                      left: "50%",
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                ))}
               {/* Effet de brillance qui traverse */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -564,7 +623,7 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
 
 function SkillsSection({ t }: { t: (key: string) => string }) {
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0)
-
+  const isMobile = useIsMobile();
   const skills = [
     { 
       name: "Unity", 
@@ -669,12 +728,11 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
       level: 80, 
       icon: <Palette className="h-6 w-6" />, 
       color: "from-pink-500 to-pink-700", 
-      description: t("DesignS")
+      description: t("UIS")
     },
   ]
 
-  // Gestion du scroll pour les compétences - Zone délimitée
-  const skillsPerPage = 4; // tu affiches 4 skills par page d'après slice
+  const skillsPerPage = isMobile ? 2 : 4;
   const totalSkillPages = Math.ceil(skills.length / skillsPerPage);
 
   // visibleSkills prend la "page" courante
@@ -685,43 +743,42 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
 
   return (
     <section
-      className="min-w-full h-full flex items-center justify-center p-14"
+      className="min-w-full h-full flex items-center justify-center p-4 sm:p-6 md:p-14"
       data-section="skills"
     >
       <div className="w-full">
         <motion.h2
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="text-6xl font-bold text-center mb-14 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-14 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
           {t("skillsTitle")}
         </motion.h2>
-        <div
-          className="w-full max-w-7xl mx-auto border-2 border-indigo-500/20 rounded-2xl p-8 bg-slate-800/20 backdrop-blur-sm relative"
-        >
+        <div className="w-full max-w-7xl mx-auto border-2 border-indigo-500/20 rounded-2xl p-4 md:p-8 bg-slate-800/20 backdrop-blur-sm relative">
         {/* Flèche gauche */}
         {currentSkillIndex > 0 && (
           <button
             onClick={() => setCurrentSkillIndex((prev) => Math.max(prev - 1, 0))}
-            className="absolute -left-14 top-1/2 -translate-y-1/2 z-10 bg-slate-700/60 hover:bg-slate-700 p-2 rounded-full"
+            className="absolute left-0 md:-left-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
+
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
           </button>
         )}
-
         {/* Flèche droite */}
         {currentSkillIndex < totalSkillPages - 1 && (
           <button
             onClick={() => setCurrentSkillIndex((prev) => Math.min(prev + 1, totalSkillPages - 1))}
-            className="absolute -right-14 top-1/2 -translate-y-1/2 z-10 bg-slate-700/60 hover:bg-slate-700 p-2 rounded-full"
+            className="absolute right-0 md:-right-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
           </button>
         )}
 
         {/* Zone de scroll délimitée pour les compétences */}
         <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-19">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-8 px-4 md:px-19">
             <AnimatePresence mode="wait">
               {visibleSkills.map((skill, index) => (
                 <motion.div
@@ -735,24 +792,24 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
                   data-section="skills"
                 >
                   <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-blue-500/50 transition-all">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className={`p-3 rounded-lg bg-gradient-to-r ${skill.color}`}>{skill.icon}</div>
-                        <h3 className="text-2xl font-bold text-white">{skill.name}</h3>
+                    <CardContent className="p-2">
+                      <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-4">
+                        <div className={`p-2 md:p-3 rounded-lg bg-gradient-to-r ${skill.color}`}>{skill.icon}</div>
+                        <h3 className="text-lg md:text-2xl font-bold text-white">{skill.name}</h3>
                       </div>
                       {skill.description && (
-                        <p className="text-slate-300 text-sm mb-7 ml-1 h-[20px]">{skill.description}</p>
+                        <p className="text-slate-300 text-xs md:text-sm mb-4 md:mb-7 ml-1 line-clamp-2">{skill.description}</p>
                       )}
                       <div className="relative">
-                        <div className="w-full bg-slate-700 rounded-full h-3">
+                        <div className="w-full bg-slate-700 rounded-full h-2 md:h-3">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${skill.level}%` }}
                             transition={{ duration: 1.5 }}
-                            className={`h-3 rounded-full bg-gradient-to-r ${skill.color}`}
+                            className={`h-2 md:h-3 rounded-full bg-gradient-to-r ${skill.color}`}
                           />
                         </div>
-                        <span className="absolute right-0 -top-8 text-blue-400 font-bold">{skill.level}%</span>
+                        <span className="absolute right-0 -top-4 md:-top-8 text-blue-400 font-bold text-xs md:text-base">{skill.level}%</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -763,12 +820,12 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
 
           {/* Indicateurs de pagination pour les compétences (si plus de 4) */}
           {skills.length > 4 && (
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-1 md:gap-2 mt-4 md:mt-8">
               {[...Array(totalSkillPages)].map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSkillIndex(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
+                  className={`h-1 md:h-2 rounded-full transition-all duration-300 ${
                     currentSkillIndex === index
                       ? "bg-blue-400 w-8"
                       : "bg-slate-600 hover:bg-slate-500 w-2"
@@ -843,7 +900,8 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
         <motion.h2
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="text-6xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
           {t("projectsTitle")}
         </motion.h2>
@@ -855,7 +913,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
           {currentProjectIndex > 0 && (
             <button
               onClick={() => setCurrentProjectIndex((prev) => Math.max(prev - 1, 0))}
-              className="absolute -left-14 top-1/2 -translate-y-1/2 z-10 bg-slate-700/60 hover:bg-slate-700 p-2 rounded-full"
+              className="absolute left-0 md:-left-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
@@ -865,7 +923,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
           {currentProjectIndex < totalPages - 1 && (
             <button
               onClick={() => setCurrentProjectIndex((prev) => Math.min(prev + 1, totalPages - 1))}
-              className="absolute -right-14 top-1/2 -translate-y-1/2 z-10 bg-slate-700/60 hover:bg-slate-700 p-2 rounded-full"
+              className="absolute right-0 md:-right-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
@@ -1003,7 +1061,8 @@ function ContactSection({ t }: { t: (key: string) => string }) {
         <motion.h2
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          className="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-6xl sm:text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
           {t("contactTitle")}
         </motion.h2>
@@ -1012,7 +1071,7 @@ function ContactSection({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-xl text-slate-300 mb-12"
+          className="text-xl md:text-2xl text-slate-300 mb-12"
         >
           {t("contactSubtitle")}
         </motion.p>
@@ -1021,7 +1080,7 @@ function ContactSection({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="flex flex-wrap justify-center gap-6"
+          className="text-base md:text-2xl flex flex-wrap justify-center gap-6"
         >
           {contacts.map((contact, index) => (
             <motion.a
@@ -1049,7 +1108,7 @@ function ContactSection({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2 }}
-          className="relative mt-12"
+          className="relative flex justify-center mt-12"
         >
           <motion.button
             onClick={() => window.open(t("downloadCV"), "_blank")}
@@ -1117,7 +1176,7 @@ function ContactSection({ t }: { t: (key: string) => string }) {
                     }}
                   />
                 </div>
-                <span className="text-slate-200 group-hover:text-white transition-colors">Curriculum Vitae</span>
+                <span className="text-slate-200 group-hover:text-white transition-colors">{t("cv")}</span>
               </motion.div>
 
               <motion.div
@@ -1138,7 +1197,7 @@ function ContactSection({ t }: { t: (key: string) => string }) {
                 transition={{ type: "spring", stiffness: 400 }}
               >
                 <span className="text-slate-400 group-hover:text-blue-400 transition-colors text-sm font-mono">
-                  PREVIEW
+                  {t("preview")}
                 </span>
                 <div className="relative">
                   <Eye className="h-5 w-5 text-slate-400 group-hover:text-blue-400 transition-colors" />

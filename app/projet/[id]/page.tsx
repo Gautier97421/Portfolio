@@ -31,6 +31,14 @@ export default function ProjectPage({ params }: PageProps) {
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   /* ------------------------- load / redirect on error ------------------------ */
   useEffect(() => {
@@ -67,7 +75,7 @@ export default function ProjectPage({ params }: PageProps) {
   const otherProjects = projects.filter((p) => p.id !== project.id).slice(0, 3)
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white" data-page="project">
-      <CustomCursor />
+      {!isMobile && <CustomCursor />}
 
       {/* Sticky header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">

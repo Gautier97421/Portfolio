@@ -47,7 +47,7 @@ export const translations = {
     CICDS: "Intégration et déploiement continus, GitHub Actions, automatisation, tests",
     DeepS: "Réseaux de neurones, PyTorch, TensorFlow, computer vision, entraînement de modèles",
     GitS: "Gestion de versions, branches, pull requests, workflows collaboratifs",
-    ThreeS: "rendu 3D, WebGL, animations,  graphismes interactifs, shaders",
+    ThreeS: "Rendu 3D, WebGL, animations,  graphismes interactifs, shaders",
     UIS: "Design centré utilisateur, prototypage, wireframing, Figma",
 
     // Projects Section
@@ -175,6 +175,8 @@ export const translations = {
     contactTitle: "Contact",
     contactSubtitle: "N'hésitez pas à me contacter pour plus d'informations",
     downloadCV: "/CV_fr.png",
+    cv: "Curriculum Vitae",
+    preview: "Preview",
 
     // Language
     language: "Français",
@@ -354,6 +356,8 @@ export const translations = {
     contactTitle: "Contact",
     contactSubtitle: "Feel free to contact me for more information",
     downloadCV: "/CV_ang.png",
+    cv: "Curriculum Vitae",
+    preview: "Preview",
 
     // Language
     language: "English",
@@ -525,6 +529,8 @@ export const translations = {
     contactTitle: "Kontakt",
     contactSubtitle: "Kontaktieren Sie mich gerne für weitere Informationen",
     downloadCV: "/CV_ang.png",
+    cv : "Lebenslauf",
+    preview: "Vorschau",
 
     // Language
     language: "Deutsch",
