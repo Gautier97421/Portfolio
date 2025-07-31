@@ -910,7 +910,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
                     <div className="relative overflow-hidden">
                       <img
                         src={project.gallery[0] || "/placeholder.svg"}
-                        alt={project.title}
+                        alt={String(project.title)}
                         className="w-full h-30 sm:h-30 md:h-40 lg:h-40 object-cover transition-transform group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />

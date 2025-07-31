@@ -116,7 +116,7 @@ export default function ProjectPage({ params }: PageProps) {
         <motion.img
           key={imgIndex}
           src={project.gallery[imgIndex]}
-          alt={project.title}
+          alt={String(project.title)}
           className="absolute inset-0 w-full h-full object-absolue bg-slate-900/20"
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -211,7 +211,7 @@ export default function ProjectPage({ params }: PageProps) {
                 <h3 className="text-lg font-semibold text-blue-400 mb-4">Informations</h3>
                 <Fact label="Date" value={project.year} />
                 <Fact label="Durée" value={project.duration} />
-                <Fact label="Statut" value={project.status} />
+                <Fact label="Statut" value={String(project.status)} />
                 <Fact label="Équipe" value={project.team} />
               </CardContent>
             </Card>
@@ -257,7 +257,7 @@ export default function ProjectPage({ params }: PageProps) {
                   <div className="relative overflow-hidden">
                     <img
                       src={otherProject.gallery?.[0] || "/fallback.png"}
-                      alt={otherProject.title}
+                      alt={String(otherProject.title)}
                       className="w-full h-56 object-cover transition-transform group-hover:scale-110"
                     />
                     
