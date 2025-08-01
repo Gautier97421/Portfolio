@@ -10,28 +10,24 @@ import CustomCursor from "@/components/custom-cursor"
 import { use } from 'react';
 import { projects } from "@/lib/project" 
 import {translations } from "@/lib/traduction"
-/* -------------------------------------------------------------------------- */
-/*                                PROJECT DATA                                */
-/*    In a real app you would fetch this, but we hard-code it for the demo.   */
-/* -------------------------------------------------------------------------- */
-
+import { useSearchParams } from "next/navigation"
+import { useLanguage } from "@/lib/use_language"
+import { getProjects } from "@/lib/project"
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
-//blablabla
-/* -------------------------------------------------------------------------- */
-/*                                  THE PAGE                                  */
-/* -------------------------------------------------------------------------- */
+
 export default function ProjectPage({ params }: PageProps) {
   const router = useRouter()
-  const [project, setProject] = useState<(typeof projects)[0] | null>(null)
   const [imgIndex, setImgIndex] = useState(0)
-  const [language, setLanguage] = useState<"fr" | "en">("fr")
+  const [language, setLanguage] = useLanguage()
+  const [isMobile, setIsMobile] = useState(false)
+  const [otherProjects, setOtherProjects] = useState<(typeof projects)>([])
+
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
-  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768)
@@ -39,26 +35,23 @@ export default function ProjectPage({ params }: PageProps) {
     window.addEventListener("resize", checkMobile)
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
+  
+  const translatedProjects = getProjects(language)
+  const project = translatedProjects.find((p) => p.id === params.id)
 
-  /* ------------------------- load / redirect on error ------------------------ */
   useEffect(() => {
     const fetchData = async () => {
       const { id } = await params;
       const found = projects.find((p) => p.id === id);
       if (!found) {
-        router.push("/");
-      } else {
-        setProject(found);
+        router.push("/")
       }
     };
-
     fetchData();
-
     document.body.style.overflow = "auto";
     document.documentElement.style.overflow = "auto";
     document.body.style.height = "auto";
     document.documentElement.style.height = "auto";
-
     return () => {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
@@ -67,65 +60,77 @@ export default function ProjectPage({ params }: PageProps) {
     };
   }, [params, router]);
 
-  if (!project) return null;
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+
+  useEffect(() => {
+    if (project) {
+      const filteredProjects = projects.filter((p) => p.id !== project.id);
+      const numberOfProjectsToShow = isMobile ? 1 : 3;
+      setOtherProjects(filteredProjects.slice(0, numberOfProjectsToShow));
+    }
+  }, [projects, project, isMobile]);
+
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "fr" ? "en" : "fr"))
+    const next = language === "fr" ? "en" : language === "en" ? "de" : "fr"
+    localStorage.setItem("language", next)
+    setLanguage(next)
   }
 
-  const otherProjects = projects.filter((p) => p.id !== project.id).slice(0, 3)
+  if (!project) return null;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white" data-page="project">
       {!isMobile && <CustomCursor />}
-
       {/* Sticky header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-          <motion.button
-            onClick={toggleLanguage}
-            className="nav-button flex gap-2 px-3 py-2 rounded-2xl font-medium transition-all border border-transparent text-gray-300 hover:text-white border-gray-600"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Languages className="h-4 w-4" />
-            <span className="text-sm">{t("switchLanguage")}</span>
-          </motion.button>
-          <Button
-            variant="ghost"
-            onClick={() => router.push("/")}
-            className="rounded-xl text-slate-200 hover:text-blue-400 nav-button"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Retour
-          </Button>
-
-          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
-            {project.title}
-          </h1>
-
-          <div className="flex gap-3 ">
-            {project.links.site && (
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
               <Button
-                variant="outline"
-                onClick={() => window.open("https://easy-ia.vercel.app/", "_blank")}
-                className="rounded-xl shadow-sm border-blue-500/40 text-blue-400 hover:bg-blue-500/10 project-button"
+                variant="ghost"
+                onClick={() => router.back()
+}
+                className="rounded-xl text-slate-200 hover:text-blue-400 nav-button"
               >
-                <Globe className="w-4 h-4 mr-2" /> Site
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                {t("back")}
               </Button>
-            )}
+            </div>
+            <div className="absolute left-1/2 transform -translate-x-1/2">
+              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
+                {project.title}
+              </h1>
+            </div>
+            <div className="flex justify-end">
+              <motion.button
+                onClick={toggleLanguage}
+                className="nav-button flex gap-2 px-3 py-2 rounded-2xl font-medium transition-all border border-transparent text-gray-300 hover:text-white border-gray-600"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Languages className="h-4 w-4" />
+                <span className="text-sm">{t("switchLanguage")}</span>
+              </motion.button>
+            </div>
           </div>
         </div>
       </header>
 
+
       {/* HERO  */}
-      <section className="relative h-[60vh] sm:h-[70vh] md:h-[calc(100vh-4rem)] overflow-hidden flex items-center justify-center">
-
-
+      <section className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[calc(100vh-4rem)] overflow-hidden flex items-center justify-center">
         {/* Image de fond avec animation */}
         <motion.img
           key={imgIndex}
-          src={project.gallery[imgIndex]}
+          src={project.gallery[imgIndex] || "/placeholder.svg"}
           alt={String(project.title)}
-          className="absolute inset-0 w-full h-full object-absolue bg-slate-900/20"
+          className="absolute inset-0 w-full h-full object-cover bg-slate-900/20"
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
@@ -133,18 +138,19 @@ export default function ProjectPage({ params }: PageProps) {
         />
 
         {/* soft gradient overlay */}
+        
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent pointer-events-none" />
 
         {/* Technologies overlay - en bas à gauche de l'image */}
         <div className="absolute bottom-6 left-6 z-20">
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {project.tech.map((tech, index) => (
               <motion.span
                 key={tech}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-sm text-green-300 text-sm border border-green-500/40 shadow-lg"
+                className="px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-sm text-green-300 text-xs md:text-sm lg:text-sm border border-green-500/40 shadow-lg"
               >
                 {tech}
               </motion.span>
@@ -174,7 +180,7 @@ export default function ProjectPage({ params }: PageProps) {
         )}
 
         {/* Dots indicator */}
-        {project.gallery.length > 1 && (
+        {!isMobile && project.gallery.length > 1 && (
           <div className="absolute bottom-6 right-6 flex gap-2 z-20">
             {project.gallery.map((_, index) => (
               <button
@@ -200,34 +206,46 @@ export default function ProjectPage({ params }: PageProps) {
         >
           {/* left – description */}
           <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-5xl lg:text-5xl font-bold bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent leading-snug pb-2">
               {project.subtitle}
             </h2>
-            <p className="text-lg leading-relaxed text-slate-300">{project.description}</p>
-            <ul className="space-y-2 ml-4 list-disc list-inside text-slate-400">
+            <p className="text-sm md:text-xl lg:text-xl leading-relaxed text-slate-300">{project.description}</p>
+            <ul className="text-xs md:text-lg lg:text-lg space-y-2 ml-4 list-disc list-inside text-slate-400">
               {project.bullets.map((b) => (
                 <li key={b}>{b}</li>
               ))}
             </ul>
+            {project.links.site && (
+              <div className="flex gap-4 ">
+                <Button
+                  variant="outline"
+                  onClick={() => window.open("https://easy-ia.vercel.app/", "_blank")}
+                  className="rounded-xl shadow-sm border-blue-500/40 text-blue-400 hover:bg-blue-500/10 project-button px-6 py-4 text-lg flex items-center"
+                >
+                  <Globe className="w-8 h-8 mr-2" /> Website
+                </Button>
+              </div>
+            )}
           </div>
+          
 
           {/* right – quick facts + fonctionnalités */}
           <div className="space-y-6">
             {/* Informations du projet */}
             <Card className="bg-slate-800/50 border-blue-500/20 rounded-2xl border backdrop-blur-sm">
               <CardContent className="p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-blue-400 mb-4">Informations</h3>
-                <Fact label="Date" value={project.year} />
-                <Fact label="Durée" value={project.duration} />
-                <Fact label="Statut" value={String(project.status)} />
-                <Fact label="Équipe" value={project.team} />
+                <h3 className="text-lg font-semibold text-blue-400 mb-4">{t("info")}</h3>
+                <Fact label={t("date")} value={project.year} />
+                <Fact label={t("duree")} value={project.duration} />
+                <Fact label={t("statut")} value={String(project.status)} />
+                <Fact label={t("team")} value={project.team} />
               </CardContent>
             </Card>
 
             {/* Fonctionnalités */}
             <Card className="bg-slate-800/50 border-purple-500/20 rounded-2xl border backdrop-blur-sm">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-purple-400 mb-4">Fonctionnalités</h3>
+                <h3 className="text-lg font-semibold text-purple-400 mb-4">{t("fonctionnalites")}</h3>
                 <ul className="space-y-2">
                   {project.features.map((feature) => (
                     <li key={feature} className="text-slate-300 text-sm flex items-center">
@@ -241,14 +259,14 @@ export default function ProjectPage({ params }: PageProps) {
           </div>
         </motion.div>
 
-        {/* Autres projets (remplace la galerie) */}
+        {/* Autres projets */}
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="space-y-8"
         >
-          <h3 className="text-3xl font-semibold text-white">Autres projets</h3>
+          <h3 className="text-3xl font-semibold text-white">{t("otherProjects")}</h3>
           <div className="grid md:grid-cols-3 gap-6">
             {otherProjects.map((otherProject, i) => (
               <motion.div
@@ -258,7 +276,7 @@ export default function ProjectPage({ params }: PageProps) {
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
                 className="relative group cursor-pointer rounded-2xl project-button"
-                onClick={() => router.push(`/projet/${otherProject.id}`)}
+                onClick={() => router.push(`/projet/${otherProject.id}?lang=${language}`)}
               >
                 <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden h-full min-h-[320px] flex flex-col">
                   {/* Image */}
@@ -296,24 +314,20 @@ export default function ProjectPage({ params }: PageProps) {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center pt-12"
+          className="text-center pt-0 md:pt-10 lg:pt-10"
         >
           <Button
-            onClick={() => router.push("/")}
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl hover:from-blue-600 hover:to-indigo-700 px-8 py-3 text-lg project-button"
+            onClick={() => router.back()}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl hover:from-blue-600 hover:to-indigo-700 px-6 md:px-8 lg:px-8 py-3 text-lg project-button"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            Retour au portfolio
+            {t("backP")}
           </Button>
         </motion.div>
       </main>
     </div>
   )
 }
-
-/* -------------------------------------------------------------------------- */
-/*                             SMALL REUSABLE PARTS                            */
-/* -------------------------------------------------------------------------- */
 
 function Fact({ label, value }: { label: string; value: string }) {
   return (

@@ -26,8 +26,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import CustomCursor from "@/components/custom-cursor"
 import { projects } from "@/lib/project" 
 import {translations } from "@/lib/traduction"
-
-//const isMobile = typeof window !== "undefined" && window.innerWidth <= 768
+import { useLanguage } from "@/lib/use_language"
+import { useSearchParams } from "next/navigation"
 
 const allGalleryImages = projects
   .flatMap(p => p.gallery)
@@ -54,7 +54,9 @@ export default function Portfolio() {
   const [currentSection, setCurrentSection] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollXProgress } = useScroll({ container: containerRef })
-  const [language, setLanguage] = useState<"fr" | "en" | "de" >("fr")
+  const [language, setLanguage] = useLanguage()
+  const searchParams = useSearchParams()
+
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
@@ -78,21 +80,22 @@ export default function Portfolio() {
       })
     }
   }
-  const toggleLanguage = () => {
-    setLanguage((prev) => {
-      if (prev === "fr") return "en"
-      if (prev === "en") return "de"
-      return "fr"
-    })
-  }
-  // const [isMobile, setIsMobile] = useState(false)
+  const allowedLangs = ["fr", "en", "de"] as const;
 
-  // useEffect(() => {
-  //   const checkMobile = () => setIsMobile(window.innerWidth <= 768)
-  //   checkMobile()
-  //   window.addEventListener("resize", checkMobile)
-  //   return () => window.removeEventListener("resize", checkMobile)
-  // }, [])
+  const toggleLanguage = () => {
+    const next = language === "fr" ? "en" : language === "en" ? "de" : "fr"
+    localStorage.setItem("language", next)
+    setLanguage(next)
+  }
+  useEffect(() => {
+    const langParam = searchParams.get("lang");
+    if (langParam && allowedLangs.includes(langParam as typeof allowedLangs[number])) {
+      if (langParam !== language) {
+        setLanguage(langParam as typeof allowedLangs[number]);
+        localStorage.setItem("language", langParam);
+      }
+    }
+  }, [searchParams, language, setLanguage]);
 
   const isMobile = useIsMobile();
 
@@ -102,12 +105,10 @@ export default function Portfolio() {
       if (target.closest(".skills-scroll-zone") || target.closest(".projects-scroll-zone")) {
         return;
       }
-
-      // Détecter si c'est un défilement de trackpad
       const isTrackpadScroll = Math.abs(e.deltaY) < 5;
 
       if (isTrackpadScroll) {
-        // Permettre le comportement de défilement par défaut pour le trackpad
+
         return;
       }
 
@@ -115,21 +116,13 @@ export default function Portfolio() {
         e.preventDefault();
         const container = containerRef.current;
         const sectionWidth = container.scrollWidth / sections.length;
-
-        // Mise à jour de la section active
         const currentScrollLeft = container.scrollLeft;
         let currentSection = Math.round(currentScrollLeft / sectionWidth);
-
-        // Déterminer la direction du défilement
         if (e.deltaY > 0) {
-          // Défilement vers la droite - section suivante
           currentSection = Math.min(currentSection + 1, sections.length - 1);
         } else {
-          // Défilement vers la gauche - section précédente
           currentSection = Math.max(currentSection - 1, 0);
         }
-
-        // Défilement vers la section déterminée
         const targetScrollLeft = currentSection * sectionWidth;
         container.scrollTo({
           left: targetScrollLeft,
@@ -283,7 +276,7 @@ export default function Portfolio() {
         <SkillsSection t={t} />
 
         {/* Projects Section */}
-        <ProjectsSection t={t} />
+        <ProjectsSection t={t} language={language} />
 
         {/* Contact Section */}
         <ContactSection t={t} />
@@ -471,7 +464,7 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
           className="grid grid-cols-1 lg:grid-cols-2 sm:gap-2 md:gap-4 lg:gap-4 items-center mx-auto"
         >
           <div className="max-w-sm sm:max-w-sm md:max-w-md lg:max-w-md xl:max-w-3xl 2xl:max-w-6xl w-full">
-            <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-4 md:mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-0 md:mb-4 lg:mb-4 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent leading-snug pb-4">
               {t("aboutTitle")}
             </h2>
 
@@ -566,7 +559,6 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
                   >
                     <img
                       src={image || "/placeholder.svg"}
-                      alt={`Projet ${index + 1}`}
                       className="w-full h-full object-cover rounded-xl"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-indigo-900/40 rounded-xl" />
@@ -752,7 +744,7 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-14 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent leading-snug pb-4"
         >
           {t("skillsTitle")}
         </motion.h2>
@@ -842,7 +834,9 @@ function SkillsSection({ t }: { t: (key: string) => string }) {
   )
 }
 
-function ProjectsSection({ t }: { t: (key: string) => string }) {
+function ProjectsSection({ t, language, }: {
+  t: (key: string) => string
+  language: "fr" | "en" | "de"}) {
   const router = useRouter()
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const projectsScrollRef = useRef<HTMLDivElement>(null)
@@ -851,8 +845,6 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
 
   const projectsPerPage = isMobile ? 1 : 3;
   const totalPages = Math.ceil(projects.length / projectsPerPage)
-
-  // Gestion du scroll pour les projets - Zone délimitée
   useEffect(() => {
     const handleProjectsWheel = (e: WheelEvent) => {
       if (projects.length <= projectsPerPage) return
@@ -888,7 +880,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
 
   // Fonction pour naviguer vers la page de détail du projet
   const goToProjectDetail = (projectId: string) => {
-    router.push(`/projet/${projectId}`)
+    router.push(`/projet/${projectId}?lang=${language}`)
   }
 
   return (
@@ -901,7 +893,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-14 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent leading-snug pb-4"
         >
           {t("projectsTitle")}
         </motion.h2>

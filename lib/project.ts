@@ -88,7 +88,7 @@ export const getProjects  = (language: "fr" | "en" | "de") => {
     ],
   },
   {
-    id: "Rubik’s Cube Solver",
+    id: "RubicsCubeSolver",
     title: t("rubiksT"),
     subtitle: t("rubiksSubt"),
     description: t("rubiksDesc"),
@@ -103,7 +103,7 @@ export const getProjects  = (language: "fr" | "en" | "de") => {
     bullets: t("rubiksB") as string[],
     features: t("rubiksF") as string[],
     gallery: [
-      "/Screen_EasyIA_1.png",
+      "",
       "",
       "",
     ],
@@ -124,13 +124,13 @@ export const getProjects  = (language: "fr" | "en" | "de") => {
     bullets: t("whiskersB") as string[],
     features: t("whiskersF") as string[],
     gallery: [
-      "",
-      "",
-      "",
+      "labyrinth_1.png",
+      "labyrinth_2.png",
+      "labyrinth_3.png",
     ],
   },
   {
-    id: "Organisateur de planning Fit Evo",
+    id: "FitEvo",
     title: t("fitevoT"),
     subtitle: t("fitevoSubt"),
     description: t("fitevoDesc"),
@@ -151,7 +151,7 @@ export const getProjects  = (language: "fr" | "en" | "de") => {
     ],
   },
   {
-    id: "Projet VR",
+    id: "ProjetVR",
     title: "Projet VR",
     subtitle: "Un projet de jeu en réalité virtuelle immersif dans un vaisseau spatial.",
     description:

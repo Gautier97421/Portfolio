@@ -178,6 +178,17 @@ export const translations = {
     cv: "Curriculum Vitae",
     preview: "Preview",
 
+    //Projets Section
+    back: "Retour",
+    info: "Informations",
+    date: "Date",
+    duree: "Durée",
+    statut: "Statut",
+    team: "Équipe",
+    fonctionnalites: "Fonctionnalités",
+    otherProjects: "Autres Projets",
+    backP: "Retour au portfolio",
+
     // Language
     language: "Français",
     switchLanguage: "English",
@@ -359,6 +370,17 @@ export const translations = {
     cv: "Curriculum Vitae",
     preview: "Preview",
 
+    // Projects Section
+    back: "Back",
+    info: "Information",
+    date: "Date",
+    duree: "Duration",
+    statut: "Status",
+    team: "Team",
+    fonctionnalites: "Features",
+    otherProjects: "Other Projects",
+    backP: "Back to portfolio",
+
     // Language
     language: "English",
     switchLanguage: "Deutsch",
@@ -531,6 +553,17 @@ export const translations = {
     downloadCV: "/CV_en.pdf",
     cv : "Lebenslauf",
     preview: "Vorschau",
+
+    //Projets Section
+    back: "Zurück",
+    info: "Informationen",
+    date: "Datum",
+    duree: "Dauer",
+    statut: "Status",
+    team: "Team",
+    fonctionnalites: "Funktionen",
+    otherProjects: "Weitere Projekte",
+    backP: "Zurück zum Portfolio",
 
     // Language
     language: "Deutsch",
