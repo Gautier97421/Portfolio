@@ -70,11 +70,12 @@ export default function ProjectPage({ params }: PageProps) {
 
   useEffect(() => {
     if (project) {
-      const filteredProjects = projects.filter((p) => p.id !== project.id);
+      const filteredProjects = translatedProjects.filter((p) => p.id !== project.id);
       const numberOfProjectsToShow = isMobile ? 1 : 3;
       setOtherProjects(filteredProjects.slice(0, numberOfProjectsToShow));
     }
-  }, [projects, project, isMobile]);
+  }, [language, project, isMobile, translatedProjects]);
+
 
   const toggleLanguage = () => {
     const next = language === "fr" ? "en" : language === "en" ? "de" : "fr"
@@ -282,7 +283,7 @@ export default function ProjectPage({ params }: PageProps) {
                   {/* Image */}
                   <div className="relative overflow-hidden">
                     <img
-                      src={otherProject.gallery?.[0] || "/fallback.png"}
+                      src={otherProject.gallery?.[0] || "/placeholder.svg"}
                       alt={String(otherProject.title)}
                       className="w-full h-56 object-cover transition-transform group-hover:scale-110"
                     />
