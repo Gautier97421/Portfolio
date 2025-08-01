@@ -5,8 +5,17 @@ import { motion } from "framer-motion"
 
 export function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isTouchDevice, setIsTouchDevice] = useState<boolean | null>(null)
 
   useEffect(() => {
+    const isTouch =
+      typeof window !== "undefined" &&
+      ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+
+    setIsTouchDevice(isTouch)
+
+    if (isTouch) return
+
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
@@ -17,6 +26,10 @@ export function CustomCursor() {
       window.removeEventListener("mousemove", updateMousePosition)
     }
   }, [])
+  if (isTouchDevice === null) return null
+
+
+  if (isTouchDevice) return null
 
   return (
     <motion.div

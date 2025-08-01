@@ -1,6 +1,6 @@
 import { translations } from "@/lib/traduction"
 
-export const getProjects  = (language: "fr" | "en") => {
+export const getProjects  = (language: "fr" | "en" | "de") => {
   const t = (key: keyof typeof translations.fr) => translations[language][key]
   return [
   {
@@ -10,8 +10,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("easyiaDesc"),
     tech: ["React + TypeScript", "Supabase", "Node.js", "CSS"],
     year: "06/2025",
-    duration: "1" + t("mois"),
-    team: "1" + t("dev"),
+    duration: "1 " + t("mois"),
+    team: "1 " + t("dev"),
     status: t("easyiaS"),
     links: {
       site: "https://easy-ia.vercel.app/",
@@ -31,8 +31,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("retexteDesc"),
     tech: ["React + TypeScript", "CSS", "Ollama", "Python + FastAPI"],
     year: "06/2025",
-    duration: "1" + t("week"),
-    team: "1" + t("dev"),
+    duration: "1 " + t("week"),
+    team: "1 " + t("dev"),
     status: t("retexteS"),
     links: {
       site: "",
@@ -52,8 +52,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("reunidocsDesc"),
     tech: ["React + TypeScript", "RAG", "PostgreSQL", "SentenceTransformers", "Ollama", "Python + FastAPI", "PDFMiner / PyMuPDF", "Cron Jobs"],
     year: "07/2025",
-    duration: "3" + t("mois"),
-    team: "1" + t("dev"),
+    duration: "3 " + t("mois"),
+    team: "1 " + t("dev"),
     status: t("reunidocsS"),
     links: {
       site: "",
@@ -73,8 +73,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("newnewsDesc"),
     tech: ["SupaBase", "Python Scraper", "Ollama", "Cron Jobs", "React + TypeScript", "FastAPI"],
     year: "07/2025",
-    duration: "3" + t("mois"),
-    team: "1" + t("dev"),
+    duration: "3 " + t("mois"),
+    team: "1 " + t("dev"),
     status: t("newnewsS"),
     links: {
       site: "",
@@ -94,8 +94,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("rubiksDesc"),
     tech: ["React + TypeScript", "Three.js", "Algorithme", "Unity"],
     year: "2024-2025",
-    duration: "4" + t("mois"),
-    team: "6"+ t("dev"),
+    duration: "4 " + t("mois"),
+    team: "6 "+ t("dev"),
     status: t("rubiksS"),
     links: {
       site: "",
@@ -115,8 +115,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("whiskersDesc"),
     tech: ["Unity", "Vite", "C#"],
     year: "2024",
-    duration: "6" + t("mois"),
-    team: "4" + t("dev"),
+    duration: "6 " + t("mois"),
+    team: "4 " + t("dev"),
     status: t("whiskersS"),
     links: {
       site: "",
@@ -136,8 +136,8 @@ export const getProjects  = (language: "fr" | "en") => {
     description: t("fitevoDesc"),
     tech: ["React + TypeScript", "Supabase ", "CSS", "Calendrier dynamique", "Graphique de progression"],
     year: "08/2025",
-    duration: "2" + t("weeks"),
-    team: "1" + t("dev"),
+    duration: "2 " + t("weeks"),
+    team: "1 " + t("dev"),
     status: t("fitevoS"),
     links: {
       site: "",

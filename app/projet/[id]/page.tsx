@@ -31,6 +31,14 @@ export default function ProjectPage({ params }: PageProps) {
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   /* ------------------------- load / redirect on error ------------------------ */
   useEffect(() => {
@@ -67,7 +75,7 @@ export default function ProjectPage({ params }: PageProps) {
   const otherProjects = projects.filter((p) => p.id !== project.id).slice(0, 3)
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white" data-page="project">
-      <CustomCursor />
+      {!isMobile && <CustomCursor />}
 
       {/* Sticky header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
@@ -116,7 +124,7 @@ export default function ProjectPage({ params }: PageProps) {
         <motion.img
           key={imgIndex}
           src={project.gallery[imgIndex]}
-          alt={project.title}
+          alt={String(project.title)}
           className="absolute inset-0 w-full h-full object-absolue bg-slate-900/20"
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -211,7 +219,7 @@ export default function ProjectPage({ params }: PageProps) {
                 <h3 className="text-lg font-semibold text-blue-400 mb-4">Informations</h3>
                 <Fact label="Date" value={project.year} />
                 <Fact label="Durée" value={project.duration} />
-                <Fact label="Statut" value={project.status} />
+                <Fact label="Statut" value={String(project.status)} />
                 <Fact label="Équipe" value={project.team} />
               </CardContent>
             </Card>
@@ -257,7 +265,7 @@ export default function ProjectPage({ params }: PageProps) {
                   <div className="relative overflow-hidden">
                     <img
                       src={otherProject.gallery?.[0] || "/fallback.png"}
-                      alt={otherProject.title}
+                      alt={String(otherProject.title)}
                       className="w-full h-56 object-cover transition-transform group-hover:scale-110"
                     />
                     

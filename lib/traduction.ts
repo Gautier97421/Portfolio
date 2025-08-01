@@ -47,7 +47,7 @@ export const translations = {
     CICDS: "Intégration et déploiement continus, GitHub Actions, automatisation, tests",
     DeepS: "Réseaux de neurones, PyTorch, TensorFlow, computer vision, entraînement de modèles",
     GitS: "Gestion de versions, branches, pull requests, workflows collaboratifs",
-    ThreeS: "rendu 3D, WebGL, animations,  graphismes interactifs, shaders",
+    ThreeS: "Rendu 3D, WebGL, animations,  graphismes interactifs, shaders",
     UIS: "Design centré utilisateur, prototypage, wireframing, Figma",
 
     // Projects Section
@@ -175,6 +175,8 @@ export const translations = {
     contactTitle: "Contact",
     contactSubtitle: "N'hésitez pas à me contacter pour plus d'informations",
     downloadCV: "/CV_fr.png",
+    cv: "Curriculum Vitae",
+    preview: "Preview",
 
     // Language
     language: "Français",
@@ -354,9 +356,186 @@ export const translations = {
     contactTitle: "Contact",
     contactSubtitle: "Feel free to contact me for more information",
     downloadCV: "/CV_ang.png",
+    cv: "Curriculum Vitae",
+    preview: "Preview",
 
     // Language
     language: "English",
-    switchLanguage: "Français",
+    switchLanguage: "Deutsch",
   },
+  de: {
+    // Navigation
+    home: "Accueil",
+    about: "Über mich",
+    skills: "Fähigkeiten",
+    projects: "Projekte",
+    contact: "Kontakt",
+
+    // Hero Section
+    portfolioTitle: "Portfolio",
+    name: "Gautier Hoarau",
+    subtitle: "Informatikingenieur spezialisiert auf künstliche Intelligenz",
+
+    // About Section
+    Motivation: "Motivation",
+    aboutTitle: "Über mich",
+    expertise: "Werdegang",
+    approach: "Ansatz",
+    objectives: "Ziele",
+    expertiseContent:
+      "Ingenieur für künstliche Intelligenz im 4. Studienjahr an JUNIA. Ich bin seit mehreren Jahren in konkreten Projekten aktiv, die Webentwicklung, KI und 3D kombinieren. Mein Weg ist geprägt von reichen Erfahrungen: Praktikum bei der CASUD (Webplattformen, KI-Sensibilisierung), immersive React Three Fiber-Anwendungen, Transkriptions- und Dokumentensuchtools, und weitere innovative Projekte.",
+    approachContent:
+      "Ich entwerfe Projekte mit einem benutzerzentrierten Ansatz, fokussiert auf Autonomie, Klarheit und Leistung. Ich mag flüssige, visuelle und anpassbare Schnittstellen, bei denen jede Interaktion durchdacht ist. Mein kreativer Prozess kombiniert Organisation, Logik und Ausdruck durch Design, Technik und Wirkung.",
+    objectivesContent:
+      "Mein Ziel ist es, weiterhin nützliche, kreative und intelligente Tools zu entwickeln. Ich habe Webseiten für die CASUD entwickelt, interaktive 3D-Plattformen, KI-Projekte, Transkriptions- und Monitoring-Tools – immer mit Innovationsgeist. Was ich an diesem Beruf liebe: Jede Idee kann Realität werden. Interfaces, Animationen, Interaktionen – alles ist formbar für ein maßgeschneidertes Erlebnis.",
+    projectsCount: "Projekte",
+    yearsCount: "Jahre",
+    engagementCount: "Engagement",
+    portfolioText: "Portfolio",
+    completedProjects: "Abgeschlossene Projekte",
+
+    // Skills Section
+    skillsTitle: "Fähigkeiten",
+    UnityS: "C#, 3D-Mechanik, UI-Canvas, Animation, Shader-Programmierung, Physik" ,
+    DatabaseS: "PostgreSQL, Supabase, SQL, Embeddings, Datenmodellierung",
+    TypeSCriptS: "Typsicheres JavaScript, Interfaces, Generics, Tooling",
+    ReactS: "React.js, Tailwind CSS, komponentenbasierte UI, State Management, Hooks",
+    DockerS: "Containerisierung, Image-Erstellung, Deployment, docker-compose, CI/CD-Pipelines",
+    NodeS: "Serverseitiges JavaScript, REST-APIs, Echtzeitanwendungen, Backend-Architektur",
+    PythonS: "FastAPI, NLP-Bibliotheken (spaCy, transformers), Web-Scraping, PPO",
+    ProcessingS: "PDF-Analyse, Textextraktion, Chunking, Normalisierung, Indexierung",
+    RAGS: "Augmented Generation, lokale KI-Modelle, Vektorsuche, kontextuelle Abfrage",
+    NLPS: "Sprachverarbeitung, RAG, automatische Zusammenfassungen, semantische Suche, Transformer",
+    CICDS: "Kontinuierliche Integration & Deployment, GitHub Actions, Automatisierung, Tests",
+    DeepS: "Neuronale Netze, PyTorch, TensorFlow, Computer Vision, Modelltraining",
+    GitS: "Versionskontrolle, Branches, Pull Requests, kollaborative Workflows",
+    ThreeS: "3D-Rendering, WebGL, Animationen, interaktive Grafiken, Shader",
+    UIS: "Nutzerzentriertes Design, Prototyping, Wireframing, Figma",
+
+    // Projects Section
+    projectsTitle: "Projekte",
+    years: "Jahre",
+    mois: "Monate",
+    weeks: "Wochen",
+    week: "Woche",
+    jours: "Tage",
+    dev: "Entwickler",
+    easyiaT: "EasyIA",
+    easyiaSubt: "Lernplattform für künstliche Intelligenz",
+    easyiaDesc:
+      "EasyIA ist eine Webplattform, die ich im Rahmen eines Praktikums entwickelt habe, um eine Verwaltungseinheit bei der Entdeckung und Nutzung von KI-Tools zu unterstützen. Die Plattform bietet zentralen Zugriff auf Lernressourcen, praktische Tools und an die Dienste angepasste Anwendungsfälle. Ziel ist es, KI verständlich zu machen und eine verantwortungsvolle Nutzung zu fördern.",
+    easyiaS: "Abgeschlossen und veröffentlicht",
+    easyiaB: [
+      "Verifizierte YouTube-Videokurse",
+      "Schriftliche Kurse",
+      "Interaktive Anwendungen",
+      "Fortschrittsverfolgung",
+      "Responsive Design"
+    ],
+    easyiaF: [
+      "Sicheres Login-System",
+      "Persönlicher Bereich mit Fortschrittsanzeige",
+      "Zugriff auf Kurse und interaktive Demos",
+      "Erweiterte Admin-Oberfläche",
+      "Responsive Design für Desktop, Tablet und Handy",
+      "Konkrete Anwendungsfälle nach Beruf (HR, Kommunikation usw.)"
+    ],
+    retexteT: "ReTexte",
+    retexteSubt: "Sicheres, lokales und automatisiertes Transkriptions-Tool für Fachleute und Verwaltungen.",
+    retexteDesc:
+      "ReTexte ist eine Webplattform zur automatischen und sicheren Transkription von Audiodateien (Meetings, Interviews, Konferenzen) in strukturierten Text. Basierend auf Whisper lokal, respektiert es die Datensicherheit und bietet eine einfache Oberfläche zum Importieren, Transkribieren, Korrigieren und Kopieren der Transkripte.",
+    retexteS: "Abgeschlossen und lokal installiert",
+    retexteB: [
+      "Echtzeit-Daten"
+    ],
+    retexteF: [
+      "Automatische Transkription von Audio- und Videodateien (MP3, MP4, etc.)",
+      "Export als formatierter Text",
+      "Offline-Modus (100% lokal)",
+      "Einfache, responsive, intuitive Oberfläche",
+      "Echtzeit-Transkription mit Download-Funktion"
+    ],
+    reunidocsT: "ReuniDocs",
+    reunidocsSubt: "Intelligente Plattform zur Analyse und Zusammenfassung großer PDF-Dokumente ohne externe Verbindung.",
+    reunidocsDesc:
+      "ReuniDocs ist ein Tool zur intelligenten Durchsuchung und Konsultation schwerer PDFs, die oft von Verwaltungen genutzt werden (z. B. Protokolle, Haushaltspläne, Raumordnungspläne). Nutzer können in natürlicher Sprache fragen und erhalten relevante Antworten mit unterstützenden Textausschnitten – komplett offline.",
+    reunidocsS: "Abgeschlossen und lokal installiert",
+    reunidocsB: [],
+    reunidocsF: [
+      "Import und automatische Verarbeitung großer Dokumente (PDF, DOCX, TXT)",
+      "Intelligente Chunk-Erstellung mit Kontextbezug",
+      "Kombination aus Keyword- und semantischer Suche",
+      "Automatische Zusammenfassungen durch KI",
+      "Lokaler Chatbot mit kontextbasierten Antworten",
+      "Oberfläche zum Durchsuchen, Anzeigen, Hinzufügen und Löschen von Dokumenten",
+      "100% lokal, sicher und schnell",
+      "Automatische Bereinigung von Dokumenten und Chatsessions"
+    ],
+    newnewsT: "NewNews",
+    newnewsSubt: "Automatisches Monitoring-System, das Nachrichten nach Themen sammelt und per KI zusammenfasst.",
+    newnewsDesc:
+      "NewNews verfolgt automatisch Nachrichtenquellen, sammelt aktuelle Artikel und fasst sie per KI zusammen. Für Angestellte oder Gewählte gedacht, unterstützt es thematische Recherchen, Berichte oder interne Verbreitung. Das Tool passt sich an Themen an und funktioniert auch lokal.",
+    newnewsS: "Abgeschlossen und lokal installiert",
+    newnewsB: [],
+    newnewsF: [
+      "Intelligentes Scraping von Presse- und Verwaltungswebseiten",
+      "Automatische Gruppierung nach Themen",
+      "Kurze Zusammenfassungen der Nachrichten",
+      "Recherche nach Relevanz und Bereich",
+      "Multi-Level-Monitoring"
+    ],
+    rubiksT: "Rubik’s Cube Solver",
+    rubiksSubt: "3D-Simulator zur Lösung jeder Rubik’s-Würfel-Konfiguration",
+    rubiksDesc:
+      "Dieses Projekt simuliert die Lösung eines Rubik’s Cube mithilfe künstlicher Intelligenz (A*- oder IDA*/BFS-Algorithmus), um optimale Züge zu berechnen. Es bietet eine 3D-Oberfläche zur Visualisierung der Schritte und erlaubt manuelles Eingeben von Mischungen.",
+    rubiksS: "Abgeschlossen",
+    rubiksB: [],
+    rubiksF: [
+      "Interaktive 3D-Modellierung des Rubik’s Cube",
+      "Intuitive Schnittstelle zur Würfelmanipulation",
+      "Automatische Lösung mit Schritt-für-Schritt-Anzeige",
+      "Manuelle Konfiguration möglich",
+      "Zoom, freie Rotation und flüssiges Rendering"
+    ],
+    whiskersT: "WhiskersLabyrinth",
+    whiskersSubt: "Immersives 3D-Labyrinthspiel mit prozeduraler Generierung und flüssiger Navigation.",
+    whiskersDesc:
+      "Labyrinth 3D ist ein in WebGL entwickeltes Spiel (React Three Fiber), bei dem der Spieler (als Katze) ein generiertes Labyrinth erkundet und Mäusen ausweicht. Es wurde entworfen zur Erprobung von 3D-Navigation, Echtzeitinteraktion und visuellen Effekten.",
+    whiskersS: "Abgeschlossen",
+    whiskersB: [],
+    whiskersF: [
+      "Freie Bewegung auf einer 3D-Fläche",
+      "Flüssige Spielersteuerung mit animierten Übergängen",
+      "Stilisiertes, prozedural generiertes Terrain",
+      "Interaktion mit Objekten und NPCs",
+      "Quest-System"
+    ],
+    fitevoT: "Fit Evo Planer",
+    fitevoSubt: "Tool für Aufgabenmanagement, Planung und Teamverfolgung mit Benachrichtigungen in Echtzeit.",
+    fitevoDesc:
+      "Organisateur ist ein Projekt- und Kollaborationstool für Teams. Es ermöglicht Aufgabenplanung, Fortschrittsverfolgung und Echtzeitbenachrichtigungen. Ziel ist es, Produktivität und Kommunikation im Team zu verbessern.",
+    fitevoS: "In Entwicklung",
+    fitevoB: [],
+    fitevoF: [
+      "Aufgabenverwaltung mit Fortschrittsanzeige",
+      "Planung von Events und Meetings",
+      "Echtzeitbenachrichtigungen (E-Mail / In-App)",
+      "Dynamischer Kalender für Aufgaben und Events",
+      "Intuitive, responsive Admin-/User-Oberfläche",
+      "Sicher und lokalisiert verbunden"
+    ],
+
+    // Contact Section
+    contactTitle: "Kontakt",
+    contactSubtitle: "Kontaktieren Sie mich gerne für weitere Informationen",
+    downloadCV: "/CV_ang.png",
+    cv : "Lebenslauf",
+    preview: "Vorschau",
+
+    // Language
+    language: "Deutsch",
+    switchLanguage: "Français",
+  }
+
+  
 }
