@@ -150,7 +150,40 @@ export const getProjects  = (language: "fr" | "en") => {
       "",
     ],
   },
+  {
+    id: "Projet VR",
+    title: "Projet VR",
+    subtitle: "Un projet de jeu en réalité virtuelle immersif dans un vaisseau spatial.",
+    description:
+      "C'est un jeu en réalité virtuelle immersif dans lequel le joueur prend les commandes d’un vaisseau spatial alimenté par un carburant… biologique. Pour continuer son périple interstellaire, le joueur doit produire ce bio-carburant en cultivant et transformant des tomates dans l’environnement du vaisseau. Cette mécanique originale mêle gestion de ressources, interactions physiques et gameplay ludique autour de l’écologie spatiale. Mais l’aventure ne s’arrête pas là. Régulièrement, des alertes de pluie de météorites viennent perturber le calme du voyage. Le joueur doit alors réagir rapidement : esquiver les projectiles, manœuvrer son vaisseau, activer les boucliers ou encore réparer les dégâts éventuels en temps réel. Ces séquences dynamiques ajoutent une tension dramatique et un défi sensoriel captivant. Grâce à une immersion VR poussée, le jeu combine exploration, gestion et action, le tout dans un univers semi-cartoon original où la survie dépend autant de l’agilité que de la stratégie.",
+    tech: ["Unity + XR Interaction Toolkit", "C#", "VR", "3D Modelling"],
+    year: "02/2025-04/2025",
+    duration: "3 mois",
+    team: "4 développeurs",
+    status: "Finalisé",
+    links: {
+      site: "",
+    },
+    bullets: [
+        
+    ],
+    features: [
+      "Système de production de bio-carburant à base de tomates en VR",
+      "Récolte, mixage et distribution du carburant dans le vaisseau",
+      "Mécanique de déplacement spatial selon le carburant produit",
+      "Séquences d’alerte météorite avec esquives VR en temps réel",
+      "Réactions physiques du cockpit (dégâts, alertes visuelles, faim)",
+      "Univers graphique original entre cartoon et SF rétro",
+
+    ],
+    gallery: [
+      "VR_project_1.png",
+      "VR_project_2.png",
+      "VR_project_3.png",
+    ],
+  },
   ]
+  
 }
 
 export const projects = getProjects("en")
