@@ -21,7 +21,7 @@ export const translations = {
     approach: "Approche",
     objectives: "Objectifs",
     expertiseContent:
-        "Ingénieur en Intelligence Artificielle en fin de 4e année à JUNIA, je sui sétudiant depuis plusieurs années des projets concrets mêlant web, IA et 3D. Mon parcours est marqué par des expériences riches : stage à la CASUD (création de plateformes web, sensibilisation à l’IA), applications immersives en React Three Fiber, outils de transcription et de recherche intelligente de documents, et bien d’autres projets liés à l’innovation numérique.",
+        "Étudiant en dernière année d’Ingénierie en Intelligence Artificielle à JUNIA, je conçois depuis plusieurs années des projets innovants combinant web, IA et environnements 3D. Mon parcours est marqué par des expériences riches : stage à la CASUD (création de plateformes web, sensibilisation à l’IA), applications immersives en React Three Fiber, outils de transcription et de recherche intelligente de documents, et bien d’autres projets liés à l’innovation numérique.",
     approachContent:
         "Je conçois mes projets avec une approche centrée sur l’expérience utilisateur, l’autonomie, la clarté et la performance. J’aime concevoir des interfaces fluides, visuelles et personnalisables, où chaque interaction est pensée. Mon processus de création allie organisation, logique et expressivité, en combinant design, technique et impact.",
     objectivesContent:
@@ -174,7 +174,7 @@ export const translations = {
     // Contact Section
     contactTitle: "Contact",
     contactSubtitle: "N'hésitez pas à me contacter pour plus d'informations",
-    downloadCV: "/CV_fr.png",
+    downloadCV: "/CV_fr.pdf",
     cv: "Curriculum Vitae",
     preview: "Preview",
 
@@ -355,7 +355,7 @@ export const translations = {
     // Contact Section
     contactTitle: "Contact",
     contactSubtitle: "Feel free to contact me for more information",
-    downloadCV: "/CV_ang.png",
+    downloadCV: "/CV_en.pdf",
     cv: "Curriculum Vitae",
     preview: "Preview",
 
@@ -528,7 +528,7 @@ export const translations = {
     // Contact Section
     contactTitle: "Kontakt",
     contactSubtitle: "Kontaktieren Sie mich gerne für weitere Informationen",
-    downloadCV: "/CV_ang.png",
+    downloadCV: "/CV_en.pdf",
     cv : "Lebenslauf",
     preview: "Vorschau",
 

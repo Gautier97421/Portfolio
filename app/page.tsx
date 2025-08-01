@@ -98,60 +98,61 @@ export default function Portfolio() {
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      
-      const target = e.target as HTMLElement
+      const target = e.target as HTMLElement;
       if (target.closest(".skills-scroll-zone") || target.closest(".projects-scroll-zone")) {
-        return 
+        return;
+      }
+
+      // Détecter si c'est un défilement de trackpad
+      const isTrackpadScroll = Math.abs(e.deltaY) < 5;
+
+      if (isTrackpadScroll) {
+        // Permettre le comportement de défilement par défaut pour le trackpad
+        return;
       }
 
       if (containerRef.current) {
-        e.preventDefault()
-        containerRef.current.scrollLeft += e.deltaY * 1.5
+        e.preventDefault();
+        const container = containerRef.current;
+        const sectionWidth = container.scrollWidth / sections.length;
 
         // Mise à jour de la section active
-        const container = containerRef.current
-        const sectionWidth = container.scrollWidth / sections.length
-        const currentScrollLeft = container.scrollLeft
-        const currentSection = Math.round(currentScrollLeft / sectionWidth)
+        const currentScrollLeft = container.scrollLeft;
+        let currentSection = Math.round(currentScrollLeft / sectionWidth);
 
-        // Déterminer la direction du scroll
+        // Déterminer la direction du défilement
         if (e.deltaY > 0) {
-          // Scroll vers la droite - section suivante
-          const nextSection = Math.min(currentSection + 1, sections.length - 1)
-          const targetScrollLeft = nextSection * sectionWidth
-
-          container.scrollTo({
-            left: targetScrollLeft,
-            behavior: "smooth",
-          })
-
-          setCurrentSection(nextSection)
+          // Défilement vers la droite - section suivante
+          currentSection = Math.min(currentSection + 1, sections.length - 1);
         } else {
-          // Scroll vers la gauche - section précédente
-          const prevSection = Math.max(currentSection - 1, 0)
-          const targetScrollLeft = prevSection * sectionWidth
-
-          container.scrollTo({
-            left: targetScrollLeft,
-            behavior: "smooth",
-          })
-
-          setCurrentSection(prevSection)
+          // Défilement vers la gauche - section précédente
+          currentSection = Math.max(currentSection - 1, 0);
         }
-      }
-    }
 
-    const container = containerRef.current
+        // Défilement vers la section déterminée
+        const targetScrollLeft = currentSection * sectionWidth;
+        container.scrollTo({
+          left: targetScrollLeft,
+          behavior: "smooth",
+        });
+
+        setCurrentSection(currentSection);
+      }
+    };
+
+    const container = containerRef.current;
     if (container) {
-      container.addEventListener("wheel", handleWheel, { passive: false })
+      container.addEventListener("wheel", handleWheel, { passive: false });
     }
 
     return () => {
       if (container) {
-        container.removeEventListener("wheel", handleWheel)
+        container.removeEventListener("wheel", handleWheel);
       }
-    }
-  }, [sections.length])
+    };
+  }, [sections.length, currentSection]);
+
+
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white overflow-x-hidden overflow-y-auto relative">
@@ -467,20 +468,20 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
           initial={{ opacity: 0, x: -100 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
-          className="grid grid-cols-1 lg:grid-cols-2 items-center mx-auto"
+          className="grid grid-cols-1 lg:grid-cols-2 sm:gap-2 md:gap-4 lg:gap-4 items-center mx-auto"
         >
           <div className="max-w-sm sm:max-w-sm md:max-w-md lg:max-w-md xl:max-w-3xl 2xl:max-w-6xl w-full">
-            <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-4 md:mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
               {t("aboutTitle")}
             </h2>
 
             {/* Tabs Navigation avec animation */}
-            <div className="flex gap-2 mb-4 md:gap-4 md:mb-8">
+            <div className="flex gap-2 mb-2 md:gap-4 md:mb-8">
               {tabs.map((tab, index) => (
                 <motion.button
                   key={index}
                   onClick={() => setActiveTab(index)}
-                  className={`text-sm md:text-xl about-button
+                  className={`text-xs md:text-xl about-button
                     h-8 md:h-auto
                     min-w-[70px]
                     px-4 md:px-6
@@ -506,13 +507,13 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-sm md:text-xl text-slate-300 leading-relaxed mb-8"
+              className="text-xs md:text-xl text-slate-300 leading-relaxed mb-4 md:mb-8"
             >
               {tabs[activeTab].content}
             </motion.div>
 
             {/* Stats avec animation violette */}
-            <div className="grid grid-cols-3 gap-4 md:gap-10 mb-8 md:mb-0">
+            <div className="grid grid-cols-3 gap-4 md:gap-10 mb-4 md:mb-0">
               {[
                 { number: nbrprojets, label: t("projects") },
                 { number: "4+", label: t("years") },
@@ -541,7 +542,7 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
             className="relative w-full max-w-8xl mx-auto" 
           >
 
-            <div className="w-full max-w-sm sm:max-w-md md:max-w-3xl lg:max-w-7xl xl:max-w-3xl h-72 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              
+            <div className="w-full max-w-xs sm:max-w-sm md:max-w-3xl lg:max-w-7xl xl:max-w-3xl h-48 sm:h-64 md:h-80 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-2xl backdrop-blur-sm border border-blue-500/20 relative overflow-hidden group interactive-element mx-auto">              
               <div className="absolute inset-2">
                 {/* Images dynamiques avec animation */}
                 {allGalleryImages.map((image, index) => (
@@ -845,11 +846,10 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
   const router = useRouter()
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const projectsScrollRef = useRef<HTMLDivElement>(null)
- 
+  const isMobile = useIsMobile();
 
 
-
-  const projectsPerPage = 3
+  const projectsPerPage = isMobile ? 1 : 3;
   const totalPages = Math.ceil(projects.length / projectsPerPage)
 
   // Gestion du scroll pour les projets - Zone délimitée
@@ -893,7 +893,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
 
   return (
     <section
-      className="min-w-full h-full flex items-center justify-center p-12 pt-20"
+      className="min-w-full h-full flex items-center justify-center p-4 pt-12 md:p-12 md:pt-20"
       data-section="projects"
     >
       <div className="w-full">
@@ -901,21 +901,21 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
+          className="text-5xl sm:text-6xl md:text-8xl font-bold text-center mb-14 bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent"
         >
           {t("projectsTitle")}
         </motion.h2>
 
         <div
-          className="w-full max-w-7xl mx-auto border-2 border-indigo-500/20 rounded-2xl p-8 min-h-[480px] bg-slate-800/20 backdrop-blur-sm relative"
+          className="w-full max-w-7xl mx-auto border-2 border-indigo-500/20 rounded-2xl p-4 md:p-8 min-h-[400px] bg-slate-800/20 backdrop-blur-sm relative"
         >
           {/* Flèche gauche */}
           {currentProjectIndex > 0 && (
             <button
               onClick={() => setCurrentProjectIndex((prev) => Math.max(prev - 1, 0))}
-              className="absolute left-0 md:-left-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
+              className="absolute -left-2 md:-left-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
             </button>
           )}
 
@@ -923,9 +923,9 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
           {currentProjectIndex < totalPages - 1 && (
             <button
               onClick={() => setCurrentProjectIndex((prev) => Math.min(prev + 1, totalPages - 1))}
-              className="absolute right-0 md:-right-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
+              className="absolute -right-2 md:-right-14 top-1/2 -translate-y-1/2 z-10 md:bg-slate-700/60 md:hover:bg-slate-700 lg:bg-slate-700/60 lg:hover:bg-slate-700 p-2 rounded-full"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
             </button>
           )}
           {/* Projets avec nouvelle animation rose/magenta */}
@@ -936,7 +936,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -100 }}
               transition={{ duration: 1.5 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8"
+              className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 md:gap-8"
             >
               {getCurrentProjects().map((project, index) => (
                 <motion.div
@@ -964,26 +964,25 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
                   }}
                   data-section="projects"
                 >
-                  <Card className="flex flex-col bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden group h-full cursor-pointer min-h-[420px]">
+                  <Card className="flex flex-col bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden group h-full cursor-pointer min-h-[300px] sm:min-h-[420px]">
                     <div className="relative overflow-hidden">
                       <img
                         src={project.gallery[0] || "/placeholder.svg"}
-                        alt={String(project.title)}
                         className="w-full h-30 sm:h-30 md:h-40 lg:h-40 object-cover transition-transform group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     </div>
 
-                    <CardContent className="flex flex-col flex-1 justify-between p-6">
+                    <CardContent className="flex flex-col flex-1 justify-between p-4 md:p-6">
                       <div>
-                        <h3 className="text-2xl font-bold text-white mb-3">{project.title}</h3>
-                        <p className="text-slate-300 mb-4 text-sm">{project.subtitle}</p>
+                        <h3 className="text-xl md:text-2xl font-bold text-white mb-3">{project.title}</h3>
+                        <p className="text-slate-300 mb-3 text-sm">{project.subtitle}</p>
 
-                        <div className="flex flex-wrap gap-2 mb-4">
+                        <div className="flex flex-wrap gap-2 mb-3">
                           {project.tech.slice(0, 3).map((tech) => (
                             <span
                               key={tech}
-                              className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-indigo-600/20 rounded-full text-sm text-blue-400 border border-blue-500/30"
+                              className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-indigo-600/20 rounded-full text-xs md:text-sm text-blue-400 border border-blue-500/30"
                             >
                               {tech}
                             </span>
@@ -992,7 +991,7 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
                       </div>
 
                       {/* Bouton fixé à une distance précise du bas */}
-                      <div className="mt-auto pt-4">
+                      <div className="mt-auto pt-2 md:pt-4">
                         <Button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 group">
                           <span className="flex items-center justify-center gap-2">
                             {project.year}
@@ -1014,9 +1013,9 @@ function ProjectsSection({ t }: { t: (key: string) => string }) {
                 <button
                   key={index}
                   onClick={() => setCurrentProjectIndex(index)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
+                  className={`h-1 md:h-2 rounded-full transition-all duration-300 ${
                     currentProjectIndex === index
-                      ? "bg-indigo-400 w-8"
+                      ? "bg-indigo-400 w-4 md:w-8"
                       : "bg-slate-600 hover:bg-slate-500 w-2"
                   }`}
                   data-section="projects"
