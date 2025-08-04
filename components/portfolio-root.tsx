@@ -372,21 +372,24 @@ function HeroSection({ t }: { t: (key: string) => string }) {
   const [isCursorVisible, setIsCursorVisible] = useState(true)
   const [showGrid, setShowGrid] = useState(false)
 
-  useEffect(() => {
+    useEffect(() => {
+    if (!name || name.length === 0) return;
+
     let currentIndex = 0
     const interval = setInterval(() => {
-      if (currentIndex < name.length) {
+        if (currentIndex < name.length) {
         setDisplayedName(name.substring(0, currentIndex + 1))
         currentIndex++
-      } else {
+        } else {
         clearInterval(interval)
         setShowSubtitle(true)
         setTimeout(() => setShowGrid(true), 500)
-      }
+        }
     }, 100)
 
     return () => clearInterval(interval)
-  }, [name])
+    }, [name])
+
 
   useEffect(() => {
     const blink = setInterval(() => {
@@ -394,69 +397,70 @@ function HeroSection({ t }: { t: (key: string) => string }) {
     }, 500)
     return () => clearInterval(blink)
   }, [])
+
   const x = isMobile ? 50 : 250
+
   return (
-  <section
-    className="min-w-full h-full flex items-center justify-center relative overflow-hidden"
-    data-section="hero"
-  >
-    {/* Grille professionnelle */}
-    {showGrid && (
-      <div className="absolute inset-0 z-0">
-        <div className="grid grid-cols-6 grid-rows-6 h-full w-full">
-          {[...Array(36)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 0.1, scale: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.005 }}
-              className="border border-slate-700/30"
-            />
-          ))}
+    <section
+        className="min-w-full h-full flex items-center justify-center relative overflow-hidden"
+        data-section="hero"
+    >
+        {/* Grille professionnelle */}
+        {showGrid && (
+        <div className="absolute inset-0 z-0">
+            <div className="grid grid-cols-6 grid-rows-6 h-full w-full">
+            {[...Array(36)].map((_, i) => (
+                <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 0.1, scale: 1 }}
+                transition={{ duration: 0.5, delay: i * 0.005 }}
+                className="border border-slate-700/30"
+                />
+            ))}
+            </div>
         </div>
-      </div>
-    )}
-
-    <div className="text-center z-10 relative px-4">
-      <motion.h1
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="text-6xl sm:text-6xl md:text-9xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-indigo-500 to-slate-300 bg-clip-text text-transparent relative"
-      >
-        {displayedName}
-        <motion.span
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-        >
-          |
-        </motion.span>
-      </motion.h1>
-
-      <AnimatePresence>
-        {showSubtitle && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.p className="text-xl sm:text-lg md:text-3xl mb-4 sm:mb-8 text-slate-300">
-              {t("subtitle")}
-            </motion.p>
-            {/* Ligne professionnelle */}
-            <motion.div
-              className="w-20 sm:w-50 md:w-50 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"
-              initial={{ width: 0 }}
-              animate={{ width: x }}
-              transition={{ duration: 1, delay: 0.5 }}
-            />
-          </motion.div>
         )}
-      </AnimatePresence>
-    </div>
-  </section>
-);
 
+        <div className="text-center z-10 relative px-4">
+        <motion.h1
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="text-6xl sm:text-6xl md:text-9xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-indigo-500 to-slate-300 bg-clip-text text-transparent relative"
+        >
+            {displayedName}
+            <motion.span
+            animate={{ opacity: [1, 0] }}
+            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+            >
+            |
+            </motion.span>
+        </motion.h1>
+
+        <AnimatePresence>
+            {showSubtitle && (
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+            >
+                <motion.p className="text-xl sm:text-lg md:text-3xl mb-4 sm:mb-8 text-slate-300">
+                {t("subtitle")}
+                </motion.p>
+                {/* Ligne professionnelle */}
+                <motion.div
+                className="w-20 sm:w-50 md:w-50 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"
+                initial={{ width: 0 }}
+                animate={{ width: x }}
+                transition={{ duration: 1, delay: 0.5 }}
+                />
+            </motion.div>
+            )}
+        </AnimatePresence>
+        </div>
+    </section>
+  );
 }
 
 function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) => string }) {
