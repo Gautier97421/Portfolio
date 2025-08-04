@@ -1,16 +1,16 @@
+// app/projet/[id]/page.tsx
+
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo  } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { ArrowLeft, Github, Globe, ChevronLeft, ChevronRight, ExternalLink, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import CustomCursor from "@/components/custom-cursor"
-import { use } from 'react';
 import { projects } from "@/lib/project" 
 import {translations } from "@/lib/traduction"
-import { useSearchParams } from "next/navigation"
 import { useLanguage } from "@/lib/use_language"
 import { getProjects } from "@/lib/project"
 
@@ -29,6 +29,7 @@ export default function ProjectPage({ params }: PageProps) {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
 
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768)
     checkMobile()
@@ -36,8 +37,9 @@ export default function ProjectPage({ params }: PageProps) {
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
   
-  const translatedProjects = getProjects(language)
-  const project = translatedProjects.find((p) => p.id === params.id)
+  const translatedProjects = useMemo(() => getProjects(language), [language]);
+  const project = useMemo(() => translatedProjects.find((p) => p.id === params.id), [translatedProjects, params.id]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,7 +60,7 @@ export default function ProjectPage({ params }: PageProps) {
       document.body.style.height = "100%";
       document.documentElement.style.height = "100%";
     };
-  }, [params, router]);
+  }, [params.id, router]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768)
@@ -81,6 +83,11 @@ export default function ProjectPage({ params }: PageProps) {
     const next = language === "fr" ? "en" : language === "en" ? "de" : "fr"
     localStorage.setItem("language", next)
     setLanguage(next)
+  }
+
+  const goToProjectDetail = (projectId: string) => {
+    console.log(`Navigating to project: ${projectId}`);
+    router.push(`/projet/${projectId}?lang=${language}`)
   }
 
   if (!project) return null;
@@ -277,7 +284,7 @@ export default function ProjectPage({ params }: PageProps) {
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
                 className="relative group cursor-pointer rounded-2xl project-button"
-                onClick={() => router.push(`/projet/${otherProject.id}?lang=${language}`)}
+                onClick={() => goToProjectDetail(otherProject.id)}
               >
                 <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-indigo-500/50 transition-all overflow-hidden h-full min-h-[320px] flex flex-col">
                   {/* Image */}
@@ -318,7 +325,7 @@ export default function ProjectPage({ params }: PageProps) {
           className="text-center pt-0 md:pt-10 lg:pt-10"
         >
           <Button
-            onClick={() => router.back()}
+            onClick={() => router.push("/")}
             className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl hover:from-blue-600 hover:to-indigo-700 px-6 md:px-8 lg:px-8 py-3 text-lg project-button"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />

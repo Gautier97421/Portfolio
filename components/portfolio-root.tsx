@@ -1,4 +1,4 @@
-// app/page.tsx
+// components/portfolio-root.tsx
 
 "use client"
 
@@ -27,7 +27,6 @@ import CustomCursor from "@/components/custom-cursor"
 import { projects } from "@/lib/project" 
 import {translations } from "@/lib/traduction"
 import { useLanguage } from "@/lib/use_language"
-import { useSearchParams } from "next/navigation"
 
 const allGalleryImages = projects
   .flatMap(p => p.gallery)
@@ -55,7 +54,6 @@ export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollXProgress } = useScroll({ container: containerRef })
   const [language, setLanguage] = useLanguage()
-  const searchParams = useSearchParams()
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
