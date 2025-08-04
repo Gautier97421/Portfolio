@@ -88,14 +88,16 @@ export default function Portfolio() {
     setLanguage(next)
   }
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
     const langParam = searchParams.get("lang");
+
     if (langParam && allowedLangs.includes(langParam as typeof allowedLangs[number])) {
       if (langParam !== language) {
         setLanguage(langParam as typeof allowedLangs[number]);
         localStorage.setItem("language", langParam);
       }
     }
-  }, [searchParams, language, setLanguage]);
+  }, [language, setLanguage]);
 
   // 2eme solutions
   // useEffect(() => {
@@ -873,22 +875,19 @@ function ProjectsSection({ t, language, }: {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const projectsScrollRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile();
-
-
   const projectsPerPage = isMobile ? 1 : 3;
   const totalPages = Math.ceil(projects.length / projectsPerPage)
+  
   useEffect(() => {
     const handleProjectsWheel = (e: WheelEvent) => {
-      if (projects.length <= projectsPerPage) return
+    if (projects.length <= projectsPerPage) return
 
       e.preventDefault()
       e.stopPropagation()
 
       if (e.deltaY > 0) {
-        // Scroll vers le bas - prochaine page
         setCurrentProjectIndex((prev) => (prev + 1) % totalPages)
       } else {
-        // Scroll vers le haut - page précédente
         setCurrentProjectIndex((prev) => (prev - 1 + totalPages) % totalPages)
       }
     }
@@ -909,8 +908,6 @@ function ProjectsSection({ t, language, }: {
     const start = currentProjectIndex * projectsPerPage
     return projects.slice(start, start + projectsPerPage)
   }
-
-  // Fonction pour naviguer vers la page de détail du projet
   const goToProjectDetail = (projectId: string) => {
     router.push(`/projet/${projectId}?lang=${language}`)
   }

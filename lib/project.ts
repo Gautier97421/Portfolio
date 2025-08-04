@@ -1,3 +1,5 @@
+// lib/project.ts
+
 import { translations } from "@/lib/traduction"
 
 export const getProjects  = (language: "fr" | "en" | "de") => {
