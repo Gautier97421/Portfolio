@@ -1,5 +1,4 @@
-// components/Language-wrapper.tsx
-
+// components/LanguageWrapper.tsx
 "use client"
 
 import { useLanguage } from "@/lib/use_language"
@@ -9,7 +8,7 @@ export function LanguageWrapper({ children }: { children: React.ReactNode }) {
   const [language] = useLanguage()
 
   useEffect(() => {
-    console.log("Langue détectée :", language)
+    console.log("Langue active :", language)
   }, [language])
 
   return <>{children}</>
