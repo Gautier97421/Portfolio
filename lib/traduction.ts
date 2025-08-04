@@ -13,6 +13,8 @@ export const translations = {
     portfolioTitle: "Portfolio",
     name: "Gautier Hoarau",
     subtitle: "Ingénieur informatique spécialisé dans l'Intelligence Artificielle",
+    cursorEnabled: "Animation activé",
+    cursorDisabled: "Animation désactivé",
 
     // About Section
     Motivation: "Motivation",
@@ -205,6 +207,8 @@ export const translations = {
     portfolioTitle: "Portfolio",
     name: "Gautier Hoarau",
     subtitle: "Computer Engineer specialized in Artificial Intelligence",
+    cursorEnabled: "Animation enabled",
+    cursorDisabled: "Animation disabled",
 
     // About Section
     Motivation: "Motivation",
@@ -397,6 +401,8 @@ export const translations = {
     portfolioTitle: "Portfolio",
     name: "Gautier Hoarau",
     subtitle: "Informatikingenieur spezialisiert auf künstliche Intelligenz",
+    cursorEnabled: "Animation aktiviert",
+    cursorDisabled: "Animation deaktiviert",
 
     // About Section
     Motivation: "Motivation",

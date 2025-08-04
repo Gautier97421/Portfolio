@@ -17,9 +17,9 @@ import {
   Zap,
   Globe,
   Database,
-  Smartphone,
   Server,
-  ExternalLink, ChevronLeft, ChevronRight, Eye, FileText, Languages
+  ExternalLink, ChevronLeft, ChevronRight, Eye, FileText, Languages, MousePointer,
+  MousePointerClick,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -27,6 +27,7 @@ import CustomCursor from "@/components/custom-cursor"
 import { projects } from "@/lib/project" 
 import {translations } from "@/lib/traduction"
 import { useLanguage } from "@/lib/use_language"
+import SimpleCursorDot from "@/components/simple-cursor"
 
 const allGalleryImages = projects
   .flatMap(p => p.gallery)
@@ -54,11 +55,11 @@ export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollXProgress } = useScroll({ container: containerRef })
   const [language, setLanguage] = useLanguage()
+  const [customCursorEnabled, setCustomCursorEnabled] = useState(true)
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
-
   const nbrprojets = projects.length
 
   const sections = [
@@ -85,6 +86,19 @@ export default function Portfolio() {
     localStorage.setItem("language", next)
     setLanguage(next)
   }
+
+  useEffect(() => {
+    const savedCursorPreference = localStorage.getItem("customCursorEnabled")
+    if (savedCursorPreference !== null) {
+      setCustomCursorEnabled(JSON.parse(savedCursorPreference))
+    }
+  }, [])
+
+  const toggleCustomCursor = () => {
+    const newValue = !customCursorEnabled
+    setCustomCursorEnabled(newValue)
+    localStorage.setItem("customCursorEnabled", JSON.stringify(newValue))
+  }
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const langParam = searchParams.get("lang");
@@ -96,33 +110,6 @@ export default function Portfolio() {
       }
     }
   }, [language, setLanguage]);
-
-  // 2eme solutions
-  // useEffect(() => {
-  //   const langParam = searchParams.get("lang");
-  //   const storedLang = localStorage.getItem("language");
-
-  //   // 1. Si l'URL contient une langue valide
-  //   if (langParam && allowedLangs.includes(langParam as typeof allowedLangs[number])) {
-  //     if (langParam !== language) {
-  //       setLanguage(langParam as typeof allowedLangs[number]);
-  //       localStorage.setItem("language", langParam);
-  //     }
-  //     return;
-  //   }
-
-  //   // 2. Sinon, si localStorage contient une langue valide
-  //   if (storedLang && allowedLangs.includes(storedLang as typeof allowedLangs[number])) {
-  //     if (storedLang !== language) {
-  //       setLanguage(storedLang as typeof allowedLangs[number]);
-  //     }
-  //     return;
-  //   }
-
-  //   // 3. Sinon, on force "fr"
-  //   setLanguage("fr");
-  //   localStorage.setItem("language", "fr");
-  // }, [searchParams, language, setLanguage]);
 
   const isMobile = useIsMobile();
 
@@ -175,10 +162,15 @@ export default function Portfolio() {
 
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white overflow-x-hidden overflow-y-auto relative">
+    <div className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white overflow-x-hidden overflow-y-auto relative cursor-none">
       {/* Curseur personnalisé */}
-      {!isMobile && <CustomCursor />}
-
+      {!isMobile && (
+        customCursorEnabled ? (
+            <CustomCursor />
+        ) : (
+            <SimpleCursorDot />
+        )
+      )}
 
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6 max-w-full">
@@ -231,26 +223,77 @@ export default function Portfolio() {
               ))}
             </div>
             {isMobile &&
-              <div className="flex gap-4">
-              
-                <motion.button
-                  onClick={toggleLanguage}
-                    className={`nav-button px-3 flex gap-2 py-2 rounded-2xl font-medium transition-all border border-transparent mr-4 ${
-                      currentSection === -1
-                        ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
-                        : "text-gray-300 hover:text-white border-gray-600"
-                    }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  data-section="language"
-                >
-                  <Languages className="h-4 w-4" />
-                  <span className="text-sm">{t("switchLanguage")}</span>
-                </motion.button>  
-            </div>
-    }
+                <div className="flex gap-4">
+                    <motion.button
+                    onClick={toggleLanguage}
+                        className={`nav-button px-3 flex gap-2 py-2 rounded-2xl font-medium transition-all border border-transparent mr-4 ${
+                        currentSection === -1
+                            ? "active bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                            : "text-gray-300 hover:text-white border-gray-600"
+                        }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    data-section="language"
+                    >
+                    <Languages className="h-4 w-4" />
+                    <span className="text-sm">{t("switchLanguage")}</span>
+                    </motion.button>  
+                </div>
+            }
         </div>
       </nav>
+      <AnimatePresence>
+        {currentSection === 0 && (
+          <motion.div
+            initial={{ opacity: 0, x: -100, y: 50 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: -100, y: 50 }}
+            transition={{ duration: 0.8, delay: 1 }}
+            className="fixed bottom-8 left-8 z-40 rounded-2xl"
+          >
+            <motion.button
+              onClick={toggleCustomCursor}
+              className="group flex items-center gap-3 bg-slate-900/90 backdrop-blur-sm text-white px-4 py-3 rounded-2xl font-medium shadow-lg hover:bg-slate-800/90 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {/* Icône animée */}
+              <motion.div
+                animate={{
+                  rotate: customCursorEnabled ? 0 : 180,
+                  scale: customCursorEnabled ? 1 : 0.9,
+                }}
+                transition={{ duration: 0.3 }}
+                className={`p-2 rounded-xl ${
+                  customCursorEnabled
+                    ? "bg-gradient-to-r from-green-500 to-emerald-600"
+                    : "bg-gradient-to-r from-red-500 to-rose-600"
+                }`}
+              >
+                {customCursorEnabled ? (
+                  <MousePointerClick className="h-4 w-4 text-white" />
+                ) : (
+                  <MousePointer className="h-4 w-4 text-white" />
+                )}
+              </motion.div>
+
+              {/* Texte */}
+              <div className="text-sm text-slate-300">
+                {customCursorEnabled ? t("cursorEnabled") : t("cursorDisabled")}
+              </div>
+
+              {/* Indicateur de statut */}
+              <motion.div
+                animate={{
+                  backgroundColor: customCursorEnabled ? "#10b981" : "#ef4444",
+                }}
+                transition={{ duration: 0.3 }}
+                className="w-2 h-2 rounded-full"
+              />
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* 3D Background professionnel avec gestion d'erreur */}
       <div className="absolute inset-0 z-0">
@@ -283,7 +326,7 @@ export default function Portfolio() {
       <div
         ref={containerRef}
         className="flex h-full overflow-x-auto overflow-y-hidden scroll-smooth z-10 relative"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: customCursorEnabled ? "none" : "default" }}
         onScroll={(e) => {
           const scrollLeft = e.currentTarget.scrollLeft
           const sectionWidth = e.currentTarget.scrollWidth / sections.length
@@ -372,9 +415,8 @@ function HeroSection({ t }: { t: (key: string) => string }) {
   const [isCursorVisible, setIsCursorVisible] = useState(true)
   const [showGrid, setShowGrid] = useState(false)
 
-    useEffect(() => {
+  useEffect(() => {
     if (!name || name.length === 0) return;
-
     let currentIndex = 0
     const interval = setInterval(() => {
         if (currentIndex < name.length) {
@@ -388,76 +430,67 @@ function HeroSection({ t }: { t: (key: string) => string }) {
     }, 100)
 
     return () => clearInterval(interval)
-    }, [name])
-
-
-  useEffect(() => {
-    const blink = setInterval(() => {
-      setIsCursorVisible(prev => !prev)
-    }, 500)
-    return () => clearInterval(blink)
-  }, [])
+  }, [name])
 
   const x = isMobile ? 50 : 250
 
   return (
     <section
         className="min-w-full h-full flex items-center justify-center relative overflow-hidden"
-        data-section="hero"
-    >
+        data-section="hero">
         {/* Grille professionnelle */}
         {showGrid && (
-        <div className="absolute inset-0 z-0">
-            <div className="grid grid-cols-6 grid-rows-6 h-full w-full">
-            {[...Array(36)].map((_, i) => (
-                <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 0.1, scale: 1 }}
-                transition={{ duration: 0.5, delay: i * 0.005 }}
-                className="border border-slate-700/30"
-                />
-            ))}
+            <div className="absolute inset-0 z-0">
+                <div className="grid grid-cols-6 grid-rows-6 h-full w-full">
+                {[...Array(36)].map((_, i) => (
+                    <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 0.1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: i * 0.005 }}
+                    className="border border-slate-700/30"
+                    />
+                ))}
+                </div>
             </div>
-        </div>
         )}
 
         <div className="text-center z-10 relative px-4">
-        <motion.h1
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="text-6xl sm:text-6xl md:text-9xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-indigo-500 to-slate-300 bg-clip-text text-transparent relative"
-        >
-            {displayedName}
-            <motion.span
-            animate={{ opacity: [1, 0] }}
-            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-            >
-            |
-            </motion.span>
-        </motion.h1>
-
-        <AnimatePresence>
-            {showSubtitle && (
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
+            <motion.h1
+                initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-            >
-                <motion.p className="text-xl sm:text-lg md:text-3xl mb-4 sm:mb-8 text-slate-300">
-                {t("subtitle")}
-                </motion.p>
-                {/* Ligne professionnelle */}
-                <motion.div
-                className="w-20 sm:w-50 md:w-50 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"
-                initial={{ width: 0 }}
-                animate={{ width: x }}
                 transition={{ duration: 1, delay: 0.5 }}
-                />
-            </motion.div>
-            )}
-        </AnimatePresence>
+                className="text-6xl sm:text-6xl md:text-9xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-indigo-500 to-slate-300 bg-clip-text text-transparent relative"
+            >
+                {displayedName}
+                <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                >
+                |
+                </motion.span>
+            </motion.h1>
+
+            <AnimatePresence>
+                {showSubtitle && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <motion.p className="text-xl sm:text-lg md:text-3xl mb-4 sm:mb-8 text-slate-300">
+                    {t("subtitle")}
+                    </motion.p>
+                    {/* Ligne professionnelle */}
+                    <motion.div
+                    className="w-20 sm:w-50 md:w-50 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto"
+                    initial={{ width: 0 }}
+                    animate={{ width: x }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    />
+                </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     </section>
   );
@@ -598,7 +631,7 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
               </div>
               
                 {/* Particules flottantes autour */}
-                {!isMobile && [...Array(12)].map((_, i) => (
+                {/* {!isMobile && [...Array(12)].map((_, i) => (
                   <motion.div
                     key={i}
                     className="absolute w-2 h-2 bg-blue-400/70 rounded-full"
@@ -620,7 +653,7 @@ function AboutSection({ nbrprojets, t }: { nbrprojets: number; t: (key: string) 
                       transform: "translate(-50%, -50%)",
                     }}
                   />
-                ))}
+                ))} */}
               {/* Effet de brillance qui traverse */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -1060,7 +1093,7 @@ function ContactSection({ t }: { t: (key: string) => string }) {
       icon: <Github className="h-6 w-6" />,
       label: "GitHub",
       color: "from-slate-500 to-slate-700",
-      href: "https://github.com/gautierhoarau",
+      href: "https://github.com/Gautier97421",
     },
     {
       icon: <Linkedin className="h-6 w-6" />,

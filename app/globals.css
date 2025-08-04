@@ -14,6 +14,10 @@ body {
   overflow: hidden;
 }
 
+.cursor-none * {
+  cursor: none !important;
+}
+
 /* Hide scrollbar */
 ::-webkit-scrollbar {
   display: none;
@@ -46,30 +50,6 @@ body {
   box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
 }
 
-/* Effet d'absorption pour les éléments interactifs
-.interactive-element {
-  position: relative;
-  overflow: hidden;
-}
-
-.interactive-element::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 255, 255, 0.2) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.interactive-element:hover::after {
-  opacity: 1;
-}
- */
 /* ===== ANIMATIONS POUR BOUTONS DE NAVIGATION (MAUVE) ===== */
 @keyframes nav-ripple {
   0% {
@@ -114,6 +94,7 @@ body {
   transform: translate(-50%, -50%);
   transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 0;
+  pointer-events: none;
 }
 
 .nav-button:hover::before {
@@ -133,6 +114,7 @@ body {
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
   z-index: 1;
+  pointer-events: none;
 }
 
 .nav-button:hover::after {
@@ -199,7 +181,7 @@ body {
   transform: translateY(-3px) rotate(1deg);
 }
 
-/* ===== NOUVELLES ANIMATIONS POUR BOUTONS À PROPOS - ONGLETS (CYAN/TURQUOISE) ===== */
+/* ===== ANIMATIONS POUR BOUTONS À PROPOS - ONGLETS (CYAN/TURQUOISE) ===== */
 @keyframes about-tab-morph {
   0% {
     border-radius: 8px;
@@ -293,7 +275,7 @@ body {
   z-index: 2;
 }
 
-/* ===== NOUVELLES ANIMATIONS POUR BOUTONS DE PROJETS (MAUVE) ===== */
+/* ===== ANIMATIONS POUR BOUTONS DE PROJETS (MAUVE) ===== */
 @keyframes project-ripple-fill {
   0% {
     transform: scale(0);

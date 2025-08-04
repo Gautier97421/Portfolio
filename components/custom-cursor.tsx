@@ -1,60 +1,48 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion, useMotionValue, useSpring, animate } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
+import { motion, useMotionValue, useSpring } from "framer-motion"
 
 export default function CustomCursor() {
-  const [isHovering, setIsHovering] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [ready, setReady] = useState(false)
 
-  // Valeurs dynamiques et animées pour le curseur
-  const cursorX = useMotionValue(0)
-  const cursorY = useMotionValue(0)
-  const trailX = useMotionValue(0)
-  const trailY = useMotionValue(0)
+  const cursorX = useRef(useMotionValue(0))
+  const cursorY = useRef(useMotionValue(0))
+  const trailX = useRef(useMotionValue(0))
+  const trailY = useRef(useMotionValue(0))
 
-  const springX = useSpring(trailX, { stiffness: 100, damping: 10 })
-  const springY = useSpring(trailY, { stiffness: 100, damping: 10 })
+  const springX = useSpring(trailX.current, { stiffness: 80, damping: 12 })
+  const springY = useSpring(trailY.current, { stiffness: 80, damping: 12 })
 
   useEffect(() => {
+    // Initialise après que le DOM est disponible
+    cursorX.current.set(window.innerWidth / 2)
+    cursorY.current.set(window.innerHeight / 2)
+    trailX.current.set(window.innerWidth / 2)
+    trailY.current.set(window.innerHeight / 2)
+    setReady(true)
+
+    let frameId: number | null = null
+
     const updatePosition = (e: MouseEvent) => {
-      if (!isHovering) {
-        const { clientX, clientY } = e
-        setMousePosition({ x: clientX, y: clientY })
-        cursorX.set(clientX - 8)
-        cursorY.set(clientY - 8)
-        trailX.set(clientX - 20)
-        trailY.set(clientY - 20)
-      }
-    }
-
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      const hoverTarget = target.closest("button, a, .absorb-cursor")
-
-      if (hoverTarget) {
-        setIsHovering(true)
-
-        const rect = hoverTarget.getBoundingClientRect()
-        const centerX = rect.left + rect.width / 2
-        const centerY = rect.top + rect.height / 2
-
-        // Animer le curseur vers le centre de l’élément
-        animate(cursorX, centerX - 12, { duration: 0.2 })
-        animate(cursorY, centerY - 12, { duration: 0.2 })
-      } else {
-        setIsHovering(false)
-      }
+      if (frameId) return
+      frameId = requestAnimationFrame(() => {
+        cursorX.current.set(e.clientX - 8)
+        cursorY.current.set(e.clientY - 8)
+        trailX.current.set(e.clientX - 20)
+        trailY.current.set(e.clientY - 20)
+        frameId = null
+      })
     }
 
     window.addEventListener("mousemove", updatePosition)
-    document.addEventListener("mouseover", handleMouseOver)
-
     return () => {
+      if (frameId) cancelAnimationFrame(frameId)
       window.removeEventListener("mousemove", updatePosition)
-      document.removeEventListener("mouseover", handleMouseOver)
     }
-  }, [isHovering])
+  }, [])
+
+  if (!ready) return null // évite le rendu côté serveur sans `window`
 
   return (
     <>
@@ -62,10 +50,10 @@ export default function CustomCursor() {
       <motion.div
         className="fixed rounded-full pointer-events-none z-[9999]"
         style={{
-          left: cursorX,
-          top: cursorY,
-          width: isHovering ? 24 : 16,
-          height: isHovering ? 24 : 16,
+          left: cursorX.current,
+          top: cursorY.current,
+          width: 16,
+          height: 16,
           backgroundColor: "#a855f7",
           mixBlendMode: "difference",
         }}
@@ -76,25 +64,19 @@ export default function CustomCursor() {
         }}
       />
 
-      {/* Cercle secondaire (effet trailing) */}
-      {!isHovering && (
-        <motion.div
-          className="fixed rounded-full pointer-events-none z-[9998] border border-[#a855f7]"
-          style={{
-            left: springX,
-            top: springY,
-            width: 40,
-            height: 40,
-          }}
-        />
-      )}
+      {/* Cercle secondaire */}
+      <motion.div
+        className="fixed rounded-full pointer-events-none z-[9998] border border-[#a855f7]"
+        style={{
+          left: springX,
+          top: springY,
+          width: 40,
+          height: 40,
+        }}
+      />
 
-      {/* Style global */}
       <style jsx global>{`
-        body,
-        button,
-        a,
-        .absorb-cursor {
+        body {
           cursor: none !important;
         }
       `}</style>
