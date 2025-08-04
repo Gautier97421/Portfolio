@@ -242,59 +242,60 @@ export default function Portfolio() {
             }
         </div>
       </nav>
-      <AnimatePresence>
-        {currentSection === 0 && (
-          <motion.div
-            initial={{ opacity: 0, x: -100, y: 50 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, x: -100, y: 50 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="fixed bottom-8 left-8 z-40 rounded-2xl"
-          >
-            <motion.button
-              onClick={toggleCustomCursor}
-              className="group flex items-center gap-3 bg-slate-900/90 backdrop-blur-sm text-white px-4 py-3 rounded-2xl font-medium shadow-lg hover:bg-slate-800/90 transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+      {!isMobile && (
+        <AnimatePresence>
+            {currentSection === 0 && (
+            <motion.div
+                initial={{ opacity: 0, x: -100, y: 50 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                exit={{ opacity: 0, x: -100, y: 50 }}
+                transition={{ duration: 0.8, delay: 1 }}
+                className="fixed bottom-8 left-8 z-40 rounded-2xl"
             >
-              {/* Icône animée */}
-              <motion.div
-                animate={{
-                  rotate: customCursorEnabled ? 0 : 180,
-                  scale: customCursorEnabled ? 1 : 0.9,
-                }}
-                transition={{ duration: 0.3 }}
-                className={`p-2 rounded-xl ${
-                  customCursorEnabled
-                    ? "bg-gradient-to-r from-green-500 to-emerald-600"
-                    : "bg-gradient-to-r from-red-500 to-rose-600"
-                }`}
-              >
-                {customCursorEnabled ? (
-                  <MousePointerClick className="h-4 w-4 text-white" />
-                ) : (
-                  <MousePointer className="h-4 w-4 text-white" />
-                )}
-              </motion.div>
+                <motion.button
+                onClick={toggleCustomCursor}
+                className="group flex items-center gap-3 bg-slate-900/90 backdrop-blur-sm text-white px-4 py-3 rounded-2xl font-medium shadow-lg hover:bg-slate-800/90 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                >
+                {/* Icône animée */}
+                <motion.div
+                    animate={{
+                    rotate: customCursorEnabled ? 0 : 180,
+                    scale: customCursorEnabled ? 1 : 0.9,
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className={`p-2 rounded-xl ${
+                    customCursorEnabled
+                        ? "bg-gradient-to-r from-green-500 to-emerald-600"
+                        : "bg-gradient-to-r from-red-500 to-rose-600"
+                    }`}
+                >
+                    {customCursorEnabled ? (
+                    <MousePointerClick className="h-4 w-4 text-white" />
+                    ) : (
+                    <MousePointer className="h-4 w-4 text-white" />
+                    )}
+                </motion.div>
 
-              {/* Texte */}
-              <div className="text-sm text-slate-300">
-                {customCursorEnabled ? t("cursorEnabled") : t("cursorDisabled")}
-              </div>
+                {/* Texte */}
+                <div className="text-sm text-slate-300">
+                    {customCursorEnabled ? t("cursorEnabled") : t("cursorDisabled")}
+                </div>
 
-              {/* Indicateur de statut */}
-              <motion.div
-                animate={{
-                  backgroundColor: customCursorEnabled ? "#10b981" : "#ef4444",
-                }}
-                transition={{ duration: 0.3 }}
-                className="w-2 h-2 rounded-full"
-              />
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+                {/* Indicateur de statut */}
+                <motion.div
+                    animate={{
+                    backgroundColor: customCursorEnabled ? "#10b981" : "#ef4444",
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="w-2 h-2 rounded-full"
+                />
+                </motion.button>
+            </motion.div>
+            )}
+        </AnimatePresence>
+      )}
       {/* 3D Background professionnel avec gestion d'erreur */}
       <div className="absolute inset-0 z-0">
         <Canvas
