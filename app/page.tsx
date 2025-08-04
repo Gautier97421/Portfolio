@@ -97,6 +97,33 @@ export default function Portfolio() {
     }
   }, [searchParams, language, setLanguage]);
 
+  // 2eme solutions
+  // useEffect(() => {
+  //   const langParam = searchParams.get("lang");
+  //   const storedLang = localStorage.getItem("language");
+
+  //   // 1. Si l'URL contient une langue valide
+  //   if (langParam && allowedLangs.includes(langParam as typeof allowedLangs[number])) {
+  //     if (langParam !== language) {
+  //       setLanguage(langParam as typeof allowedLangs[number]);
+  //       localStorage.setItem("language", langParam);
+  //     }
+  //     return;
+  //   }
+
+  //   // 2. Sinon, si localStorage contient une langue valide
+  //   if (storedLang && allowedLangs.includes(storedLang as typeof allowedLangs[number])) {
+  //     if (storedLang !== language) {
+  //       setLanguage(storedLang as typeof allowedLangs[number]);
+  //     }
+  //     return;
+  //   }
+
+  //   // 3. Sinon, on force "fr"
+  //   setLanguage("fr");
+  //   localStorage.setItem("language", "fr");
+  // }, [searchParams, language, setLanguage]);
+
   const isMobile = useIsMobile();
 
   useEffect(() => {
