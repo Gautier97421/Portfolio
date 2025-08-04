@@ -13,6 +13,7 @@ import { projects } from "@/lib/project"
 import {translations } from "@/lib/traduction"
 import { useLanguage } from "@/lib/use_language"
 import { getProjects } from "@/lib/project"
+import SimpleCursorDot from "@/components/simple-cursor"
 
 interface PageProps {
   params: { id: string };
@@ -24,7 +25,7 @@ export default function ProjectPage({ params }: PageProps) {
   const [language, setLanguage] = useLanguage()
   const [isMobile, setIsMobile] = useState(false)
   const [otherProjects, setOtherProjects] = useState<(typeof projects)>([])
-
+  const [customCursorEnabled, setCustomCursorEnabled] = useState(true)
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.fr] as string;
   }
@@ -68,7 +69,12 @@ export default function ProjectPage({ params }: PageProps) {
     window.addEventListener("resize", checkMobile)
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
-
+  useEffect(() => {
+    const savedCursorPreference = localStorage.getItem("customCursorEnabled")
+    if (savedCursorPreference !== null) {
+      setCustomCursorEnabled(JSON.parse(savedCursorPreference))
+    }
+  }, [])
 
   useEffect(() => {
     if (project) {
@@ -93,8 +99,14 @@ export default function ProjectPage({ params }: PageProps) {
   if (!project) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white" data-page="project">
-      {!isMobile && <CustomCursor />}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white cursor-none" data-page="project">
+      {!isMobile && (
+        customCursorEnabled ? (
+            <CustomCursor />
+        ) : (
+            <SimpleCursorDot />
+        )
+      )}
       {/* Sticky header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
         <div className="mx-auto max-w-7xl px-6 py-4">
