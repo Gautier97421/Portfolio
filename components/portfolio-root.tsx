@@ -297,7 +297,7 @@ export default function Portfolio() {
         </AnimatePresence>
       )}
       {/* 3D Background professionnel avec gestion d'erreur */}
-      <div className="absolute inset-0 z-0">
+      {/* <div className="absolute inset-0 z-0">
         <Canvas
           camera={{ position: [0, 0, 10] }}
           onCreated={({ gl }) => {
@@ -321,7 +321,7 @@ export default function Portfolio() {
           <ProfessionalBackground />
           <SubtleParticles />
         </Canvas>
-      </div>
+      </div> */}
 
       {/* Horizontal Scroll Container */}
       <div
@@ -357,35 +357,35 @@ export default function Portfolio() {
 }
 
 // Arrière-plan 3D professionnel optimisé
-function ProfessionalBackground() {
-  return (
-    <>
-      {/* Formes géométriques subtiles - Réduites pour les performances */}
-      <Float speed={0.5} rotationIntensity={0.2} floatIntensity={0.5}>
-        <Box args={[1.5, 1.5, 1.5]} position={[-8, 3, -10]}>
-          <meshStandardMaterial color="#1e293b" transparent opacity={0.3} wireframe />
-        </Box>
-      </Float>
+// function ProfessionalBackground() {
+//   return (
+//     <>
+//       {/* Formes géométriques subtiles - Réduites pour les performances */}
+//       <Float speed={0.5} rotationIntensity={0.2} floatIntensity={0.5}>
+//         <Box args={[1.5, 1.5, 1.5]} position={[-8, 3, -10]}>
+//           <meshStandardMaterial color="#1e293b" transparent opacity={0.3} wireframe />
+//         </Box>
+//       </Float>
 
-      <Float speed={0.3} rotationIntensity={0.1} floatIntensity={0.3}>
-        <Sphere args={[1, 16, 16]} position={[8, -3, -12]}>
-          <meshStandardMaterial color="#334155" transparent opacity={0.2} />
-        </Sphere>
-      </Float>
+//       <Float speed={0.3} rotationIntensity={0.1} floatIntensity={0.3}>
+//         <Sphere args={[1, 16, 16]} position={[8, -3, -12]}>
+//           <meshStandardMaterial color="#334155" transparent opacity={0.2} />
+//         </Sphere>
+//       </Float>
 
-      <Float speed={0.4} rotationIntensity={0.15} floatIntensity={0.4}>
-        <Box args={[0.8, 2, 0.8]} position={[5, 4, -8]}>
-          <meshStandardMaterial color="#475569" transparent opacity={0.25} wireframe />
-        </Box>
-      </Float>
+//       <Float speed={0.4} rotationIntensity={0.15} floatIntensity={0.4}>
+//         <Box args={[0.8, 2, 0.8]} position={[5, 4, -8]}>
+//           <meshStandardMaterial color="#475569" transparent opacity={0.25} wireframe />
+//         </Box>
+//       </Float>
 
-      {/* Plans géométriques en arrière-plan */}
-      <Plane args={[20, 20]} position={[0, 0, -20]} rotation={[0, 0, 0]}>
-        <meshStandardMaterial color="#0f172a" transparent opacity={0.1} />
-      </Plane>
-    </>
-  )
-}
+//       {/* Plans géométriques en arrière-plan */}
+//       <Plane args={[20, 20]} position={[0, 0, -20]} rotation={[0, 0, 0]}>
+//         <meshStandardMaterial color="#0f172a" transparent opacity={0.1} />
+//       </Plane>
+//     </>
+//   )
+// }
 
 // Particules optimisées
 function SubtleParticles() {
