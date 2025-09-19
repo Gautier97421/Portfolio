@@ -176,7 +176,7 @@ export const translations = {
     // Contact Section
     contactTitle: "Contact",
     contactSubtitle: "N'hésitez pas à me contacter pour plus d'informations",
-    downloadCV: "/CV_fr.pdf",
+    downloadCV: "/CV_en.pdf",
     cv: "Curriculum Vitae",
     preview: "Preview",
 
